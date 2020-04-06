@@ -1,0 +1,14 @@
+.hand {
+  display: inline-flex;
+  .card:not(:first-child) {
+    margin-left: -65px !important;
+    z-index: +1;
+    transition: margin-left 0.5s;
+  }
+  &:hover {
+    .card:not(:first-child) {
+      margin-left: 2.5px !important;
+      z-index: +1;
+    }
+  }
+}
