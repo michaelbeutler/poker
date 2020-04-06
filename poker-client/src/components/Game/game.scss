@@ -1,0 +1,16 @@
+.poker-table {
+    width: 80%;
+    height: 550px;
+    background-color: rgb(8, 136, 29);
+    border-radius: 20px;
+    border: 20px solid rgb(156, 58, 58);
+    margin: auto;
+    margin-top: 20px;
+
+    .hand {
+        margin-top: 350px;
+        margin-left: calc(50% - 207px / 2);
+        position: relative;
+        bottom: 0px;
+    }
+}
