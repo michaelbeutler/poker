@@ -4,6 +4,10 @@ import PropTypes from 'prop-types';
 import { CLUBS, DIAMONDS, HEARTS, SPADES } from './constants';
 import './card.scss';
 
+/**
+ * Card Component
+ * @augments {Component<Props, State>}
+ */
 export default class Card extends Component {
     render() {
         let suit = "";
@@ -40,5 +44,5 @@ Card.propTypes = {
     /** Defines rank of the card. */
     rank: PropTypes.oneOf([2, 3, 4, 5, 6, 7, 8, 9, 10, "J", "Q", "K", "A"]).isRequired,
     /** Defines suit of the card. */
-    suit: PropTypes.oneOf([2, 3, 4, 5, 6, 7, 8, 9, 10, "J", "Q", "K", "A"]).isRequired
+    suit: PropTypes.oneOf([CLUBS, DIAMONDS, HEARTS, SPADES]).isRequired
 };
