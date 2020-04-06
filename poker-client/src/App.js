@@ -1,21 +1,10 @@
 import React from 'react';
-import Hand from './components/Hand';
-// eslint-disable-next-line
-import { CLUBS, DIAMONDS, HEARTS, SPADES } from './components/Card/constants';
+import Game from './components/Game';
 
 function App() {
   return (
     <div className="App">
-      <Hand cards={[
-        {
-          rank: "A",
-          suit: CLUBS
-        },
-        {
-          rank: "A",
-          suit: HEARTS
-        }
-      ]} />
+      <Game />
     </div>
   );
 }
