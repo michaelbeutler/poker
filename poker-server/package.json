@@ -1,0 +1,8 @@
+{
+  "name": "poker-server",
+  "version": "1.0.0",
+  "description": "Serverside appliaction for poker-client by MichiBeutler.",
+  "main": "app.js",
+  "author": "MichiBeutler",
+  "license": "MIT"
+}
