@@ -1,14 +1,21 @@
 import React from 'react';
-import Card from './components/Card';
+import Hand from './components/Hand';
+// eslint-disable-next-line
 import { CLUBS, DIAMONDS, HEARTS, SPADES } from './components/Card/constants';
 
 function App() {
   return (
     <div className="App">
-      <Card rank={"A"} suit={CLUBS} />
-      <Card rank={"A"} suit={DIAMONDS} />
-      <Card rank={"A"} suit={HEARTS} />
-      <Card rank={"A"} suit={SPADES} />
+      <Hand cards={[
+        {
+          rank: "A",
+          suit: CLUBS
+        },
+        {
+          rank: "A",
+          suit: HEARTS
+        }
+      ]} />
     </div>
   );
 }
