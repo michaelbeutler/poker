@@ -1,0 +1,10 @@
+{
+  "name": "poker",
+  "version": "1.0.0",
+  "repository": "https://github.com/MichiBeutler/poker.git",
+  "author": "MichiBeutler <michael.beutler@gibmit.ch>",
+  "license": "MIT",
+  "scripts": {
+    "build": "cd poker-client && yarn build && cd ../poker-server && yarn build"
+  }
+}
