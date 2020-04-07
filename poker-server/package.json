@@ -6,7 +6,8 @@
   "author": "MichiBeutler",
   "license": "MIT",
   "devDependencies": {
-    "jest": "^25.2.7"
+    "jest": "^25.2.7",
+    "socket.io-client": "^2.3.0"
   },
   "dependencies": {
     "express": "^4.17.1",
@@ -14,6 +15,7 @@
     "socket.io": "^2.3.0"
   },
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "test": "jest"
   }
 }
