@@ -1,16 +1,32 @@
+body {
+    background-color: rgb(11, 150, 11);
+}
+.game {
+    height: 100%;
+    padding: 10px;
+    h1 {
+        margin-bottom: 5px;
+        color: rgb(228, 169, 20);
+    }
+}
 .poker-table {
+    background-image: url("../../assets/SVG/table.svg");
+    background-repeat: no-repeat;
+    background-position: center;
     width: 80%;
-    height: 550px;
-    background-color: rgb(8, 136, 29);
-    border-radius: 20px;
-    border: 20px solid rgb(156, 58, 58);
+    height: 80%;
     margin: auto;
     margin-top: 20px;
+    display: block;
 
     .hand {
-        margin-top: 350px;
-        margin-left: calc(50% - 207px / 2);
         position: relative;
-        bottom: 0px;
+        bottom: 0;
     }
+}
+button {
+    width: 200px;
+    padding: 5px 15px;
+    margin: 5px;
+    cursor: pointer;
 }
