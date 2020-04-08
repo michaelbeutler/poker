@@ -35,14 +35,7 @@ export function games(
             })
         case ADD_ROUND:
             return Object.assign({}, state, {
-                rounds: state.rounds.push({
-                    didHandOut: false,
-                    didFlop: false,
-                    didTurn: false,
-                    didRiver: false,
-                    playerCards: [],
-                    dealerCards: []
-                })
+                rounds: state.rounds.push(action.round)
             })
         case REMOVE_ROUND:
             return Object.assign({}, state, {

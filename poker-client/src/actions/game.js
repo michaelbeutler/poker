@@ -9,6 +9,13 @@ export const ROUND_FLOP = 'ROUND_FLOP';
 export const ROUND_TURN = 'ROUND_TURN';
 export const ROUND_RIVER = 'ROUND_RIVER';
 
+export function addRound(round) {
+    return {
+        type: ADD_ROUND,
+        round
+    }
+}
+
 export function handOutCards(cards) {
     return {
         type: ROUND_HAND_OUT_CARDS,

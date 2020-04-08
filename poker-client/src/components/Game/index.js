@@ -6,7 +6,7 @@ import Player from '../Player';
 import { CLUBS, DIAMONDS, HEARTS, SPADES } from '../Card/constants';
 import './game.scss';
 
-import { roundFlop, roundTurn, roundRiver, handOutCards } from '../../actions/game'
+import { addRound, roundFlop, roundTurn, roundRiver, handOutCards } from '../../actions/game'
 import io from 'socket.io-client'
 
 let socket;
@@ -16,10 +16,14 @@ let socket;
  */
 class Game extends Component {
     componentDidMount() {
-        socket = io.connect("http://tmr3:3001");
+        socket = io.connect("http://localhost:3001");
+
         socket.on('ROUND_HAND_OUT_CARDS', data => {
-            console.log('ROUND_HAND_OUT_CARDS')
             this.props.dispatch(handOutCards(data.cards));
+        });
+
+        socket.on('ROUND_START', data => {
+            this.props.dispatch(addRound(data.round));
         });
     }
     handOutCardsToPlayers() {
@@ -66,6 +70,8 @@ class Game extends Component {
                     <button onClick={() => { this.flop() }} disabled={rounds[rounds.length - 1].didFlop}>Flop</button>
                     <button onClick={() => { this.turn() }} disabled={rounds[rounds.length - 1].didTurn}>Turn</button>
                     <button onClick={() => { this.river() }} disabled={rounds[rounds.length - 1].didRiver}>River</button>
+                    <button onClick={() => { socket.emit('CREATE_GAME') }}>Neu</button>
+                    <button onClick={() => { socket.emit('JOIN_GAME', { id: prompt('id') }) }}>Beitreten</button>
                 </div>
             </div>
         )
