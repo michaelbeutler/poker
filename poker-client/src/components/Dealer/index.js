@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 
 import Card from '../Card';
-import { CLUBS, DIAMONDS, HEARTS, SPADES } from '../Card/constants';
 import './dealer.scss';
 
 /**
@@ -19,8 +17,4 @@ export default class Dealer extends Component {
             </div>
         )
     }
-};
-
-Dealer.propTypes = {
-
 };
