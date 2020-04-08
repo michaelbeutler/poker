@@ -7,12 +7,21 @@ import { CLUBS, DIAMONDS, HEARTS, SPADES } from '../Card/constants';
 import './game.scss';
 
 import { roundFlop, roundTurn, roundRiver, handOutCards } from '../../actions/game'
+import io from 'socket.io-client'
 
+let socket;
 /**
  * Game Component
  * @augments {Component<Props, State>}
  */
 class Game extends Component {
+    componentDidMount() {
+        socket = io.connect("http://tmr3:3001");
+        socket.on('ROUND_HAND_OUT_CARDS', data => {
+            console.log('ROUND_HAND_OUT_CARDS')
+            this.props.dispatch(handOutCards(data.cards));
+        });
+    }
     handOutCardsToPlayers() {
         this.props.dispatch(handOutCards([
             { suit: HEARTS, rank: 8 },
