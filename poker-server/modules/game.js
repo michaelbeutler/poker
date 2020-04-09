@@ -15,6 +15,7 @@ class Game {
             for (const room in socket.rooms) {
                 if (socket.id !== room) socket.leave(room);
             }
+            this.io.to(this.id).emit('ADD_PLAYER', { player: { id: socket.id } });
             socket.room = this.id;
             socket.join(this.id);
 
@@ -36,13 +37,14 @@ class Game {
         return true;
     }
     start() {
-        if (this.players.lenght > 1) {
+        if (this.players.length >= 2) {
             this.started = true;
             this.io.to(this.id).emit('GAME_START');
+            console.log(`[${'S'.yellow}] started game ${this.id}`);
             setTimeout(() => {
                 this.startNewRound();
             }, 1000);
-        }
+        } else { console.log(`[${'S'.red}] unabled to start game ${this.id} to few players (${this.players.length})`); }
     }
     startNewRound() {
         const round = {
@@ -51,10 +53,13 @@ class Game {
             didHandOutCards: false,
             didFlop: false,
             didTurn: false,
-            didRiver: false
+            didRiver: false,
+            dealerCards: [],
+            playerCards: []
         }
         this.rounds.push(round);
         this.io.to(this.id).emit('ROUND_START', { round });
+        console.log(`[${'S'.yellow}] started round ${this.rounds.length} for ${this.id}`);
     }
 }
 module.exports = Game;

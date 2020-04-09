@@ -6,7 +6,7 @@ import Player from '../Player';
 import { CLUBS, DIAMONDS, HEARTS, SPADES } from '../Card/constants';
 import './game.scss';
 
-import { startGame, setGame, addRound, roundFlop, roundTurn, roundRiver, handOutCards } from '../../actions/game'
+import { startGame, setGame, addPlayer, addRound, roundFlop, roundTurn, roundRiver, handOutCards } from '../../actions/game'
 import io from 'socket.io-client'
 
 let socket;
@@ -16,13 +16,13 @@ let socket;
  */
 class Game extends Component {
     componentDidMount() {
-        socket = io.connect("http://localhost:3001");
+        socket = io.connect("http://tmr3:3001");
 
         socket.on('SET_GAME', data => {
             this.props.dispatch(setGame(data.id, data.admin));
         });
 
-        socket.on('START_GAME', () => {
+        socket.on('GAME_START', () => {
             this.props.dispatch(startGame());
         });
 
@@ -32,6 +32,15 @@ class Game extends Component {
 
         socket.on('ROUND_START', data => {
             this.props.dispatch(addRound(data.round));
+        });
+
+        socket.on('ADD_PLAYER', data => {
+            console.log(`player ${data.player.id} joined`);
+            this.props.dispatch(addPlayer(data.player));
+        });
+
+        socket.on('reconnect', (attemptNumber) => {
+            if (this.props.games.id) { socket.emit('JOIN_GAME', { id: prompt('id') }) };
         });
     }
     handOutCardsToPlayers() {
@@ -70,7 +79,7 @@ class Game extends Component {
             <div className="game">
                 {rounds.length > 0 ?
                     <div>
-                        < Dealer cards={rounds[rounds.length - 1].dealerCards} />
+                        <Dealer cards={rounds[rounds.length - 1].dealerCards} />
                         <div style={{ display: 'flex', alignItems: 'stretch', alignContent: 'stretch', width: '100%' }}>
                             <Player name={"You"} cards={rounds[rounds.length - 1].playerCards} />
                         </div>
@@ -78,9 +87,13 @@ class Game extends Component {
                     : ""}
 
                 <div style={{ position: 'absolute', bottom: '20px' }}>
-                    <button onClick={() => { socket.emit('CREATE_GAME') }}>Neu</button>
-                    <button onClick={() => { socket.emit('JOIN_GAME', { id: prompt('id') }) }}>Beitreten</button>
-                    <button onClick={() => { socket.emit('START_GAME', { id }) }} disabled={!admin}>Starten</button>
+                    {!didStart ?
+                        <div>
+                            <button onClick={() => { socket.emit('CREATE_GAME') }}>Neu</button>
+                            <button onClick={() => { socket.emit('JOIN_GAME', { id: prompt('id') }) }}>Beitreten</button>
+                            <button onClick={() => { socket.emit('START_GAME', { id }) }} disabled={!admin}>Starten</button>
+                        </div>
+                        : ""}
                     {rounds.length > 0 ?
                         <div>
                             <button onClick={() => { this.handOutCardsToPlayers(); }} disabled={rounds[rounds.length - 1].didHandOut}>Hand out</button>

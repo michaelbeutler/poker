@@ -20,7 +20,7 @@ export function games(
     },
     action
 ) {
-    const { rounds } = state;
+    const { rounds, players } = state;
     switch (action.type) {
         case SET_GAME:
             return Object.assign({}, state, {
@@ -32,16 +32,18 @@ export function games(
                 didStart: true
             })
         case ADD_PLAYER:
+            players.push(action.player);
             return Object.assign({}, state, {
-                players: state.players.push(action.player)
+                players: players
             })
         case REMOVE_PLAYER:
             return Object.assign({}, state, {
                 players: state.filter(player => { return player !== action.player })
             })
         case ADD_ROUND:
+            rounds.push(action.round);
             return Object.assign({}, state, {
-                rounds: state.rounds.push(action.round)
+                rounds
             })
         case REMOVE_ROUND:
             return Object.assign({}, state, {

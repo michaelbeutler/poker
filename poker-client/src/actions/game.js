@@ -1,5 +1,5 @@
 export const SET_GAME = 'SET_GAME';
-export const START_GAME = 'SET_GAME';
+export const START_GAME = 'START_GAME';
 
 export const ADD_PLAYER = 'ADD_PLAYER';
 export const REMOVE_PLAYER = 'REMOVE_PLAYER';
@@ -21,7 +21,14 @@ export function setGame(id, admin) {
 
 export function startGame() {
     return {
-        type: SET_GAME
+        type: START_GAME
+    }
+}
+
+export function addPlayer(player) {
+    return {
+        type: ADD_PLAYER,
+        player
     }
 }
 

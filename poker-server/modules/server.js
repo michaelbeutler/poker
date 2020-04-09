@@ -44,7 +44,6 @@ class Server {
                 const game = this.getGameById(data.id);
                 if (game.admin.id === socket.id) {
                     game.start();
-                    console.log(`[${'S'.yellow}] ${socket.id} started game ${game.id}`);
                 } else { console.log(`[${'!'.red}] ${socket.id} is not allowed to start game ${game.id}`) };
             });
 
