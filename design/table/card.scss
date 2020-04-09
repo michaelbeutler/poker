@@ -1,10 +1,15 @@
-@import '../node_modules/bootstrap/dist/css/bootstrap-grid.min.css';
-
 $card-padding: 10px;
 $card-color-red: red;
 $card-scale: 0.75;
 $border-table: 10px;
-$trans-scale: 34deg;
+$trans-scale: 40deg;
+$poker-table-height: 96vh;
+$poker-table-padding-y: 4vh;
+$row-height: calc((#{$poker-table-height} - 2 * #{$poker-table-padding-y} - 2 * #{$border-table}) / 3);
+$cards-double-width: calc(2 * 120px * #{$card-scale} + 10px);
+$padding-center: calc((#{$row-height} - #{$cards-double-width}) / 2);
+
+// ========== CARD ========== 
 
 .card {
   display: block;
@@ -13,7 +18,6 @@ $trans-scale: 34deg;
   border: 0.5px solid black;
   background-color: #fff;
   border-radius: 5%;
-  //margin: 10px * $card-scale;
   font-size: 18pt * $card-scale;
   
   .card-suit {
@@ -44,20 +48,7 @@ $trans-scale: 34deg;
     repeating-linear-gradient(to right, #617ca2, #617ca2 5px * $card-scale, #28487d 5px * $card-scale, #28487d 10px * $card-scale);
 }
 
-.margin-auto > .card {
-  margin-left: auto;
-  margin-right: auto;
-} 
-
-body {
-    //height: 100vh;
-   // width: 100vw;
-    margin: 0;
-    padding: 0;
-}
-
-$poker-table-height: 96vh;
-$poker-table-padding-y: 4vh;
+// ========== POKER TABLE ========== 
 
 .poker-table{
     margin: 2vh 2vw;
@@ -72,88 +63,94 @@ $poker-table-padding-y: 4vh;
     background-color: rgb(77, 189, 111);
 }
 
-.poker-table-row {
-  height: calc((#{$poker-table-height} - 2 * #{$poker-table-padding-y} - 2 * #{$border-table}) / 3);
-  //background-image: linear-gradient(red, yellow);
+// ========== POKER TABLE ROW ========== 
 
+.poker-table-row {
+  height: $row-height;
+  //background-image: linear-gradient(red, yellow);
+  clear: both
 }
 
 .poker-table-row-top, .poker-table-row-bottom {
   padding: 0 6vh;
 }
 
-.float-left {
-  float: left;
-}
-
-.float-right {
-  float: right;
-}
-
-.poker-table-top-bottom-left {
-  width: calc((#{$poker-table-height} - 2 * #{$poker-table-padding-y} - 2 * #{$border-table}) / 3);
-  height: 100%;
-}
-
-.poker-table-top-left {
-  padding: 6vh 0 0 0;
-}
-
-.poker-table-top-right {
-  padding: 6vh 0 0 0;
-}
-
-.poker-table-bottom-right {
-  padding-top: calc(((#{$poker-table-height} - 2 * #{$poker-table-padding-y} - 2 * #{$border-table}) / 3) - 175px * #{$card-scale} - 6vh);
-  padding-right: 6vh;
-}
-
-.poker-table-bottom-left {
-  padding-top: calc(((#{$poker-table-height} - 2 * #{$poker-table-padding-y} - 2 * #{$border-table}) / 3) - 175px * #{$card-scale} - 6vh);
-  padding-left: 6vh;
-}
+// ========== POKER TABLE TOP ROW ========== 
 
 .poker-table-top {
   width: auto;
   height: 100%;
 }
 
+.poker-table-top-bottom-left {
+  width: $row-height;
+  height: 100%;
+}
+
+.poker-table-row > div {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box; 
+}
+
 .poker-table-top-bottom-right {
   height: 100%;
-  width: calc((#{$poker-table-height} - 2 * #{$poker-table-padding-y} - 2 * #{$border-table}) / 3);
+  width: $row-height;
+}
+
+.poker-table-top-left, .poker-table-top-bottom-right {
+  padding: calc(2 * #{$poker-table-padding-y}) 0 0 0;
+}
+
+// ========== POKER TABLE CENTER ROW ========== 
+
+.poker-table-center {
+  width: calc(100% - 2 * #{$row-height});
+  height: 100%;
 }
 
 .poker-table-center-left {
-  width: 25%;
+  width: $row-height;
   height: 100%;
-  padding-top: calc((((#{$poker-table-height} - 2 * #{$poker-table-padding-y} - 2 * #{$border-table}) / 3) - 175px * #{$card-scale}) / 2);
-  padding-left: 2.5vh;
-}
-
-.poker-table-center {
-  width: 50%;
-  height: 100%;
-}
+  padding-top: 0;
+  padding-left: $padding-center;
+}  
 
 .poker-table-center-right {
-  width: 25%;
+  width: $row-height;
   height: 100%;
-  padding-top: calc((((#{$poker-table-height} - 2 * #{$poker-table-padding-y} - 2 * #{$border-table}) / 3) - 175px * #{$card-scale}) / 2);
-  padding-left: calc(25% - 120px * #{$card-scale} - 2.5vh);
+  padding-top: 0;
+  padding-left: $padding-center;
+}
+
+// ========== POKER TABLE BOTTOM ROW ========== 
+
+.poker-table-bottom-left {
+  padding-top: calc(#{$row-height} - 175px * #{$card-scale} - 2 * #{$poker-table-padding-y});
 }
 
 .poker-table-bottom-center {
-  width: calc((100% - 2* ((#{$poker-table-height} - 2 * #{$poker-table-padding-y} - 2 * #{$border-table}) / 3)) / 2);
+  width: calc((100% - 2 * #{$row-height}) / 2);
   height: 100%;
-  padding-bottom: 1vh;
   position: relative;
-  padding-left: calc((((100% - 2* ((#{$poker-table-height} - 2 * #{$poker-table-padding-y} - 2 * #{$border-table}) / 3)) / 2) - 120px * #{$card-scale}) / 2);
-  padding-right: calc((((100% - 2* ((#{$poker-table-height} - 2 * #{$poker-table-padding-y} - 2 * #{$border-table}) / 3)) / 2) - 120px * #{$card-scale}) / 2);
+  padding-left: calc((((100% - 2* #{$row-height}) / 2) - #{$cards-double-width}) / 2);
+  padding-right: calc((((100% - 2* #{$row-height}) / 2) - #{$cards-double-width}) / 2);
+}
+
+.poker-table-bottom-right {
+  padding-top: calc(#{$row-height} - 175px * #{$card-scale} - 2 * #{$poker-table-padding-y});
 }
 
 .poker-table-top-bottom-left > .width-calc, .poker-table-top-bottom-right > .width-calc {
   margin: 0 calc((((96vh - 2 * 4vh - 2 * 10px) / 3) - (2 * 120px * #{$card-scale} + 10px) )/ 2);
 }
+
+.poker-table-bottom-center > .card-container {
+  position: absolute;
+  bottom: 0;
+}
+
+// ========== TRANSFORM ROTATE ========== 
 
 .transform-top-left {
   -ms-transform: rotate(-$trans-scale); /* IE 9 */
@@ -175,9 +172,11 @@ $poker-table-padding-y: 4vh;
   transform: rotate(90deg);
 }
 
-.poker-table-bottom-center > .card {
-  position: absolute;
-  bottom: 0;
+// ========== MIXED ========== 
+
+body {
+    margin: 0;
+    padding: 0;
 }
 
 .width-calc {
@@ -187,3 +186,20 @@ $poker-table-padding-y: 4vh;
 .card-container .card:last-child {
   margin-left: 10px;
 }
+
+.float-left {
+  float: left;
+}
+
+.float-right {
+  float: right;
+}
+
+.clear-both {
+  clear: both
+}
+
+.margin-auto > .card {
+  margin-left: auto;
+  margin-right: auto;
+} 
