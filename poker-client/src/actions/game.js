@@ -1,3 +1,6 @@
+export const SET_GAME = 'SET_GAME';
+export const START_GAME = 'SET_GAME';
+
 export const ADD_PLAYER = 'ADD_PLAYER';
 export const REMOVE_PLAYER = 'REMOVE_PLAYER';
 
@@ -8,6 +11,19 @@ export const ROUND_HAND_OUT_CARDS = 'ROUND_HAND_OUT_CARDS';
 export const ROUND_FLOP = 'ROUND_FLOP';
 export const ROUND_TURN = 'ROUND_TURN';
 export const ROUND_RIVER = 'ROUND_RIVER';
+
+export function setGame(id, admin) {
+    return {
+        type: SET_GAME,
+        game: { id, admin }
+    }
+}
+
+export function startGame() {
+    return {
+        type: SET_GAME
+    }
+}
 
 export function addRound(round) {
     return {

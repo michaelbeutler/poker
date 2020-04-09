@@ -1,4 +1,6 @@
 import {
+    SET_GAME,
+    START_GAME,
     ADD_PLAYER,
     REMOVE_PLAYER,
     ADD_ROUND,
@@ -11,20 +13,24 @@ import {
 import { CLUBS, DIAMONDS, HEARTS, SPADES } from '../components/Card/constants'
 export function games(
     state = {
+        id: null,
+        didStart: false,
         players: [],
-        rounds: [{
-            didHandOut: false,
-            didFlop: false,
-            didTurn: false,
-            didRiver: false,
-            playerCards: [],
-            dealerCards: []
-        }]
+        rounds: []
     },
     action
 ) {
     const { rounds } = state;
     switch (action.type) {
+        case SET_GAME:
+            return Object.assign({}, state, {
+                id: action.game.id,
+                admin: action.game.admin
+            })
+        case START_GAME:
+            return Object.assign({}, state, {
+                didStart: true
+            })
         case ADD_PLAYER:
             return Object.assign({}, state, {
                 players: state.players.push(action.player)

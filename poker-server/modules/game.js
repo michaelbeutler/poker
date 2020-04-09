@@ -6,8 +6,9 @@ class Game {
         this.started = false;
         this.rounds = [];
     }
-    join(socket) {
-        if (this.players.length < 8) {
+    join(socket, admin = false) {
+        if (admin) { this.admin = socket };
+        if (this.players.length < 8 && this.started === false) {
             this.players.push(socket);
             console.log(`[${'+'.green}] ${socket.id} joined game ${this.id} (${this.players.length})`);
 
@@ -17,19 +18,20 @@ class Game {
             socket.room = this.id;
             socket.join(this.id);
 
+            socket.emit('SET_GAME', { id: this.id, admin: admin });
             return true;
         }
         console.log(`[${'X'.red}] ${socket.id} unable to join game ${this.id} (${this.players.length})`);
         return false;
     }
     leave(socket) {
-        console.log(`[${'-'.red}] ${socket.id} leave game ${this.id}`);
-        this.players = this.players.filter(p => { p.id !== socket.id });
+        this.players = this.players.filter(p => { return p.id !== socket.id });
 
         for (const room in socket.rooms) {
             if (socket.id !== room) socket.leave(room);
         }
         socket.room = null;
+        console.log(`[${'-'.red}] ${socket.id} left game ${this.id} (${this.players.length})`);
 
         return true;
     }
@@ -39,7 +41,7 @@ class Game {
             this.io.to(this.id).emit('GAME_START');
             setTimeout(() => {
                 this.startNewRound();
-            }, 5000);
+            }, 1000);
         }
     }
     startNewRound() {
