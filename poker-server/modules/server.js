@@ -32,11 +32,12 @@ class Server {
 
             // create game
             socket.on('JOIN_GAME', (data) => {
+                console.log(`[${'D'.cyan}] ${socket.id} tried to join room with id ${data.id}`);
                 const game = this.getGameById(data.id)
                 if (game) {
-                    if (socket.room && socket.room !== null) { this.getGameById(socket.room).leave(socket) };
+                    if (socket.room && socket.room !== null) { this.getGameById(socket.room).leave(socket); };
                     game.join(socket);
-                }
+                } else { socket.emit('JOIN_GAME_ERROR', { text: `no active game found with id ${data.id}\r\nmaybe the server has restarted...` }) };
             });
 
             // start game
@@ -54,6 +55,8 @@ class Server {
                 this.removeEmptyGames();
             });
         });
+
+        this.restoreGames();
 
         setInterval(() => {
             this.removeEmptyGames();
@@ -75,6 +78,59 @@ class Server {
         const game = new Game(id, this.io);
         this.games.push(game);
         return game;
+    }
+    saveGames() {
+        console.log(`[${'?'.yellow}] try to save games`);
+        const fs = require('fs');
+
+        const dir = './saved';
+        if (!fs.existsSync(dir)) {
+            fs.mkdirSync(dir);
+        }
+
+        if (this.games.length > 0) {
+            fs.writeFile(`${Date.now()}.json`, JSON.stringify({ games: this.games }), function (err) {
+                if (err) return console.log(err);
+                console.log(`[${'?'.red}] unable to save games ${err}`);
+            });
+        }
+    }
+    restoreGames() {
+        console.log(`[${'?'.yellow}] try to restore games`);
+        const fs = require('fs');
+
+        const dir = './saved';
+        if (!fs.existsSync(dir)) {
+            fs.mkdirSync(dir);
+            console.log(`[${'?'.green}] no games to restore`);
+            return true;
+        }
+
+        fs.readdir(dir, function (err, files) {
+            //handling error
+            if (err) {
+                console.log(`[${'?'.red}] unable to scan dir ${err}`);
+                return false;
+            }
+
+            if (files.length < 1) {
+                console.log(`[${'?'.green}] no games to restore`);
+                return true;
+            }
+
+            files.forEach(function (file) {
+                const content = fs.readFileSync(file);
+                const json = JSON.parse(content);
+                if (!json.games) {
+                    console.log(`[${'?'.red}] invalid json ${file}`);
+                    return false;
+                }
+
+                this.games = json.games;
+                console.log(`[${'?'.green}] restored ${this.games.length} games`);
+                return true;
+            });
+        });
     }
 }
 module.exports = Server;
