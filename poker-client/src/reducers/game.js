@@ -10,7 +10,6 @@ import {
     ROUND_TURN,
     ROUND_RIVER
 } from '../actions/game'
-import { CLUBS, DIAMONDS, HEARTS, SPADES } from '../components/Card/constants'
 export function games(
     state = {
         id: null,

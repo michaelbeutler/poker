@@ -1,29 +1,243 @@
-body {
-    background-color: rgb(11, 150, 11);
-}
-.game {
-    height: 100%;
-    padding: 10px;
-    h1 {
-        margin-bottom: 5px;
-        color: rgb(228, 169, 20);
-    }
-}
-.poker-table {
-    width: 80%;
-    height: 80%;
-    margin: auto;
-    margin-top: 20px;
-    display: block;
+$card-padding: 10px;
+$card-color-red: red;
+$card-scale: 0.75;
+$card-border: 0.5px;
 
-    .hand {
+$poker-control-height: 40px;
+
+$table-border: 10px;
+$trans-rotate: 32deg;
+$poker-table-height: calc(96vh - #{$poker-control-height});
+$poker-table-padding-y: 2vh;
+$poker-table-row-padding-x: 10vh;
+$row-height: calc((#{$poker-table-height} - 2 * #{$poker-table-padding-y} - 2 * #{$table-border}) / 3);
+
+$cards-margin-between: 10px;
+$cards-two-width: calc(2 * 120px * #{$card-scale} + #{$cards-margin-between} + 4 * #{$card-border});
+$cards-five-width: calc(5 * 120px * #{$card-scale} + 4 * #{$cards-margin-between} + 2 * 5 * #{$card-border});
+$padding-center: calc((#{$row-height} - #{$cards-two-width}) / 2);
+
+$poker-table-center-width: calc(100% - (2 * #{$row-height}));
+
+// ========== CARD ==========
+
+.card {
+    display: block;
+    width: 120px * $card-scale;
+    height: 175px * $card-scale;
+    border: $card-border solid black;
+    background-color: #fff;
+    border-radius: 5%;
+    font-size: 18pt * $card-scale;
+
+    .card-suit {
+        text-align: center;
+        line-height: 115px * $card-scale;
+        font-size: 45pt * $card-scale;
+    }
+    .card-rank {
+        text-align: left;
         position: relative;
-        bottom: 0;
+        line-height: 30px * $card-scale;
+    }
+    .card-rank:first-child {
+        left: $card-padding * $card-scale;
+        top: $card-padding * $card-scale;
+    }
+    .card-rank:last-child {
+        transform: rotate(180deg);
+        right: $card-padding * $card-scale;
+        bottom: $card-padding * $card-scale;
     }
 }
-button {
-    width: 200px;
-    padding: 5px 15px;
-    margin: 5px;
-    cursor: pointer;
+.card-red {
+    color: $card-color-red;
+}
+.card-back {
+    background-image: repeating-linear-gradient(
+            to bottom,
+            transparent,
+            transparent 5px * $card-scale,
+            #28487d 5px * $card-scale,
+            #28487d 10px * $card-scale
+        ),
+        repeating-linear-gradient(
+            to right,
+            #617ca2,
+            #617ca2 5px * $card-scale,
+            #28487d 5px * $card-scale,
+            #28487d 10px * $card-scale
+        );
+}
+
+// ========== POKER TABLE ==========
+
+.poker-table {
+    margin: 2vh 2vw;
+    padding: $poker-table-padding-y 2vw;
+    height: $poker-table-height;
+    width: 96vw;
+    border-radius: 50vh;
+    border: $table-border solid black;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    background-color: rgb(77, 189, 111);
+}
+
+// ========== POKER TABLE ROW ==========
+
+.poker-table-row {
+    height: $row-height;
+    //background-image: linear-gradient(red, yellow);
+    clear: both;
+}
+
+.poker-table-row-top,
+.poker-table-row-bottom {
+    padding: 0 $poker-table-row-padding-x;
+}
+
+// ========== POKER TABLE TOP ROW ==========
+
+.poker-table-top {
+    width: calc(100% - 2 * #{$row-height});
+    height: 100%;
+}
+
+.poker-table-top-bottom-left {
+    width: $row-height;
+    height: 100%;
+}
+
+.poker-table-row > div {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.poker-table-top-bottom-right {
+    height: 100%;
+    width: $row-height;
+}
+
+.poker-table-top-bottom-left,
+.poker-table-top-bottom-right {
+    padding-top: calc(3.5 * #{$poker-table-padding-y});
+}
+
+// ========== POKER TABLE CENTER ROW ==========
+
+.poker-table-center {
+    width: $poker-table-center-width;
+    height: 100%;
+}
+
+.poker-table-center-left,
+.poker-table-center-right {
+    width: $row-height;
+    height: 100%;
+    padding-top: 0.5vw;
+    padding-left: $padding-center;
+}
+
+// ========== POKER TABLE BOTTOM ROW ==========
+
+.poker-table-bottom-left,
+.poker-table-bottom-right {
+    padding-top: calc(#{$row-height} - 175px * #{$card-scale} - 3.5 * #{$poker-table-padding-y});
+}
+
+.poker-table-bottom-center {
+    width: calc((100% - 2 * #{$row-height}) / 2);
+    height: 100%;
+    position: relative;
+    padding-left: calc((((100% - 2 * #{$row-height}) / 2) - #{$cards-two-width}) / 2);
+    padding-right: calc((((100% - 2 * #{$row-height}) / 2) - #{$cards-two-width}) / 2);
+}
+
+.poker-table-top-bottom-left > .width-calc,
+.poker-table-top-bottom-right > .width-calc {
+    margin: 0 calc((#{$row-height} - #{$cards-two-width}) / 2);
+}
+
+.poker-table-bottom-center > .card-container {
+    position: absolute;
+    bottom: 0;
+}
+
+// ========== TRANSFORM ROTATE ==========
+
+.transform-top-left {
+    -ms-transform: rotate(-$trans-rotate); /* IE 9 */
+    transform: rotate(-$trans-rotate);
+}
+
+.transform-top-right {
+    -ms-transform: rotate($trans-rotate); /* IE 9 */
+    transform: rotate($trans-rotate);
+}
+
+.transform-center-left {
+    -ms-transform: rotate(-90deg); /* IE 9 */
+    transform: rotate(-90deg);
+}
+
+.transform-center-right {
+    -ms-transform: rotate(90deg); /* IE 9 */
+    transform: rotate(90deg);
+}
+
+// ========== POKER CONTROL ==========
+
+.poker-control {
+    width: 100%;
+    height: $poker-control-height;
+}
+
+// ========== MIXED ==========
+
+html {
+    position: fixed;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+}
+
+.width-calc {
+    width: $cards-two-width;
+}
+
+.width-calc-center {
+    width: $cards-five-width;
+    margin: 0 auto;
+    padding-top: calc((#{$row-height} - (175px * #{$card-scale})) / 2);
+}
+
+.card-container .card:last-child,
+.card-container-center > .card {
+    margin-left: $cards-margin-between;
+}
+
+.card-container-center > .card:first-child {
+    margin-left: 0;
+}
+
+.float-left {
+    float: left;
+}
+
+.float-right {
+    float: right;
+}
+
+.clear-both {
+    clear: both;
+}
+
+.margin-auto > .card {
+    margin-left: auto;
+    margin-right: auto;
 }

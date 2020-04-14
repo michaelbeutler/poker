@@ -1,25 +1,32 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
 
-import Dealer from '../Dealer';
-import Player from '../Player';
-import { CLUBS, DIAMONDS, HEARTS, SPADES } from '../Card/constants';
+import io from 'socket.io-client'
+import { startGame, setGame, addPlayer, addRound, handOutCards } from '../../actions/game'
+
+import Card, { BackCard } from '../Card';
 import './game.scss';
 
-import { startGame, setGame, addPlayer, addRound, roundFlop, roundTurn, roundRiver, handOutCards } from '../../actions/game'
-import io from 'socket.io-client'
-
-let socket;
 /**
  * Game Component
  * @augments {Component<Props, State>}
  */
 class Game extends Component {
-    componentDidMount() {
-        socket = io.connect("http://tmr3:3001");
+    constructor(props) {
+        super(props);
+        this.state = { socket: io.connect("http://tmr3:3001") };
 
+        const { socket } = this.state;
         socket.on('SET_GAME', data => {
             this.props.dispatch(setGame(data.id, data.admin));
+        });
+
+        socket.on('SET_GAME_ERROR', data => {
+            alert(`unable to join game\r\n${data.id}`)
+        });
+
+        socket.on('JOIN_GAME_ERROR', data => {
+            console.error(data.text);
         });
 
         socket.on('GAME_START', () => {
@@ -40,71 +47,120 @@ class Game extends Component {
         });
 
         socket.on('reconnect', (attemptNumber) => {
-            if (this.props.games.id) { socket.emit('JOIN_GAME', { id: prompt('id') }) };
+            if (this.props.game.id) { socket.emit('JOIN_GAME', { id: this.props.game.id }) };
         });
     }
-    handOutCardsToPlayers() {
-        this.props.dispatch(handOutCards([
-            { suit: HEARTS, rank: 8 },
-            { suit: HEARTS, rank: 6 }
-        ]))
-    }
-    flop() {
-        this.props.dispatch(roundFlop([
-            { suit: SPADES, rank: 10 },
-            { suit: HEARTS, rank: 2 },
-            { suit: SPADES, rank: 5 }
-        ]))
-    }
-    turn() {
-        this.props.dispatch(roundTurn([
-            { suit: SPADES, rank: 10 },
-            { suit: HEARTS, rank: 2 },
-            { suit: SPADES, rank: 5 },
-            { suit: CLUBS, rank: 'A' }
-        ]))
-    }
-    river() {
-        this.props.dispatch(roundRiver([
-            { suit: SPADES, rank: 10 },
-            { suit: HEARTS, rank: 2 },
-            { suit: SPADES, rank: 5 },
-            { suit: CLUBS, rank: 'A' },
-            { suit: SPADES, rank: 10 }
-        ]))
-    }
     render() {
-        const { rounds, id, admin, players, didStart } = this.props.games;
+        const { socket } = this.state;
+        const { rounds, id, admin, players, didStart } = this.props.game;
+        const currentRound = rounds[rounds.length - 1];
         return (
             <div className="game">
-                {rounds.length > 0 ?
-                    <div>
-                        <Dealer cards={rounds[rounds.length - 1].dealerCards} />
-                        <div style={{ display: 'flex', alignItems: 'stretch', alignContent: 'stretch', width: '100%' }}>
-                            <Player name={"You"} cards={rounds[rounds.length - 1].playerCards} />
+                {didStart && rounds.length > 0 ? <div className="poker-table">
+                    <div className="poker-table-row poker-table-row-top">
+                        <div className="margin-auto float-left poker-table-top-bottom-left poker-table-top-left transform-top-left">
+                            <div className="card-container width-calc">
+                                {players.length > 3 && currentRound.didHandOut ? <>
+                                    <BackCard />
+                                    <BackCard />
+                                </> : ""}
+                            </div>
+                        </div>
+                        <div className="float-left poker-table-top">
+                        </div>
+                        <div className="margin-auto float-right poker-table-top-bottom-right poker-table-top-right transform-top-right">
+                            <div className="card-container width-calc">
+                                {players.length > 2 && currentRound.didHandOut ? <>
+                                    <BackCard />
+                                    <BackCard />
+                                </> : ""}
+                            </div>
                         </div>
                     </div>
-                    : ""}
 
-                <div style={{ position: 'absolute', bottom: '20px' }}>
-                    {!didStart ?
-                        <div>
+                    <div className="poker-table-row">
+                        <div className="float-left poker-table-center-left transform-center-left">
+                            <div className="card-container width-calc">
+                                {players.length > 1 && currentRound.didHandOut ? <>
+                                    <BackCard />
+                                    <BackCard />
+                                </> : ""}
+                            </div>
+                        </div>
+                        <div className="float-left poker-table-center">
+                            <div className="card-container-center width-calc-center">
+                                <div className="card card-back float-left"></div>
+                                <div className="card card-back float-left"></div>
+                                <div className="card card-back float-left"></div>
+                                <div className="card card-back float-left"></div>
+                                <div className="card card-back float-left"></div>
+                            </div>
+                        </div>
+                        <div className="float-left poker-table-center-right transform-center-right">
+                            <div className="card-container width-calc">
+                                {players.length > 6 && currentRound.didHandOut ? <>
+                                    <BackCard />
+                                    <BackCard />
+                                </> : ""}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="poker-table-row poker-table-row-bottom">
+                        <div className="margin-auto float-left poker-table-top-bottom-left poker-table-bottom-left transform-top-right">
+                            <div className="card-container width-calc">
+                                {players.length > 4 && currentRound.didHandOut ? <>
+                                    <BackCard />
+                                    <BackCard />
+                                </> : ""}
+                            </div>
+                        </div>
+                        <div className="float-left poker-table-bottom-center">
+                            <div className="card-container width-calc">
+                                {players.length > 5 && currentRound.didHandOut ? <>
+                                    <BackCard />
+                                    <BackCard />
+                                </> : ""}
+                            </div>
+                        </div>
+                        <div className="float-left poker-table-bottom-center">
+                            <div className="card-container width-calc">
+                                {players.length > 0 && currentRound.didHandOut ? <>
+                                    {rounds[rounds.length - 1].playerCards.map((card, index) => (
+                                        <Card suit={card.suit} rank={card.rank} key={index} />
+                                    ))}
+                                </> : ""}
+                            </div>
+                        </div>
+                        <div
+                            className="margin-auto float-right poker-table-top-bottom-right poker-table-bottom-right transform-top-left">
+                            <div className="card-container width-calc">
+                                {players.length > 7 && currentRound.didHandOut ? <>
+                                    <BackCard />
+                                    <BackCard />
+                                </> : ""}
+                            </div>
+                        </div>
+                    </div>
+                </div> : ""}
+                <div className="poker-control">
+                    {!didStart &&
+                        <>
                             <button onClick={() => { socket.emit('CREATE_GAME') }}>Neu</button>
                             <button onClick={() => { socket.emit('JOIN_GAME', { id: prompt('id') }) }}>Beitreten</button>
                             <button onClick={() => { socket.emit('START_GAME', { id }) }} disabled={!admin}>Starten</button>
-                        </div>
-                        : ""}
-                    {rounds.length > 0 ?
-                        <div>
+                        </>
+                    }
+                    {rounds.length > 0 &&
+                        <>
                             <button onClick={() => { this.handOutCardsToPlayers(); }} disabled={rounds[rounds.length - 1].didHandOut}>Hand out</button>
                             <button onClick={() => { this.flop() }} disabled={rounds[rounds.length - 1].didFlop}>Flop</button>
                             <button onClick={() => { this.turn() }} disabled={rounds[rounds.length - 1].didTurn}>Turn</button>
                             <button onClick={() => { this.river() }} disabled={rounds[rounds.length - 1].didRiver}>River</button>
-                        </div>
-                        : ""}
+                        </>
+                    }
+                    {id ? id : "no game joined"} - <b>{admin ? "admin" : "user"}</b> - {didStart ? "started" : "not started yet"}
                 </div>
-                <p>{id ? id : "no game joined"} - <b>{admin ? "admin" : "user"}</b></p>
-                <p>{didStart ? "started" : "not started yet"}</p>
             </div>
         )
     }
@@ -112,9 +168,8 @@ class Game extends Component {
 
 function mapStateToProps(state) {
     const { games } = state;
-
     return {
-        games
+        game: games
     }
 }
 

@@ -31,10 +31,19 @@ export default class Card extends Component {
                 throw new Error("invalid suit");
         }
         return (
-            <div className={`card${isRed ? " card-red" : ""}`}>
+            <div className={`card${isRed ? " card-red" : ""} float-left`}>
                 <div className="card-rank">{this.props.rank}</div>
                 <div className="card-suit">{suit}</div>
                 <div className="card-rank">{this.props.rank}</div>
+            </div>
+        )
+    }
+};
+
+export class BackCard extends Component {
+    render() {
+        return (
+            <div className={`card card-back float-left`}>
             </div>
         )
     }
