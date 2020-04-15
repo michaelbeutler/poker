@@ -3,6 +3,7 @@ export const START_GAME = 'START_GAME';
 
 export const ADD_PLAYER = 'ADD_PLAYER';
 export const REMOVE_PLAYER = 'REMOVE_PLAYER';
+export const CLEAR_PLAYERS = 'CLEAR_PLAYERS';
 
 export const ADD_ROUND = 'ADD_ROUND';
 export const REMOVE_ROUND = 'REMOVE_ROUND';
@@ -29,6 +30,12 @@ export function addPlayer(player) {
     return {
         type: ADD_PLAYER,
         player
+    }
+}
+
+export function clearPlayers() {
+    return {
+        type: CLEAR_PLAYERS
     }
 }
 

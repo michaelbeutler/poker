@@ -4,6 +4,7 @@ import {
     ADD_PLAYER,
     REMOVE_PLAYER,
     ADD_ROUND,
+    CLEAR_PLAYERS,
     REMOVE_ROUND,
     ROUND_HAND_OUT_CARDS,
     ROUND_FLOP,
@@ -38,6 +39,10 @@ export function games(
         case REMOVE_PLAYER:
             return Object.assign({}, state, {
                 players: state.filter(player => { return player !== action.player })
+            })
+        case CLEAR_PLAYERS:
+            return Object.assign({}, state, {
+                players: []
             })
         case ADD_ROUND:
             rounds.push(action.round);

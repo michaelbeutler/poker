@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux'
 
 import io from 'socket.io-client'
-import { startGame, setGame, addPlayer, addRound, handOutCards } from '../../actions/game'
+import { startGame, setGame, addPlayer, clearPlayers, addRound, handOutCards } from '../../actions/game'
 
 import Card, { BackCard } from '../Card';
 import './game.scss';
@@ -14,7 +14,7 @@ import './game.scss';
 class Game extends Component {
     constructor(props) {
         super(props);
-        this.state = { socket: io.connect("http://localhost:3001") };
+        this.state = { socket: io.connect("http://tmr3:3001") };
 
         const { socket } = this.state;
         socket.on('SET_GAME', data => {
@@ -47,6 +47,7 @@ class Game extends Component {
         });
 
         socket.on('reconnect', (attemptNumber) => {
+            this.props.dispatch(clearPlayers());
             if (this.props.game.id) { socket.emit('JOIN_GAME', { id: this.props.game.id }) };
         });
     }
@@ -147,7 +148,7 @@ class Game extends Component {
                     {!didStart &&
                         <>
                             <button onClick={() => { socket.emit('CREATE_GAME') }}>Neu</button>
-                            <button onClick={() => { socket.emit('JOIN_GAME', { id: prompt('id') }) }}>Beitreten</button>
+                            <button onClick={() => { this.props.dispatch(clearPlayers()); socket.emit('JOIN_GAME', { id: prompt('id') }); }}>Beitreten</button>
                             <button onClick={() => { socket.emit('START_GAME', { id }) }} disabled={!admin}>Starten</button>
                         </>
                     }
