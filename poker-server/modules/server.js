@@ -89,9 +89,12 @@ class Server {
         }
 
         if (this.games.length > 0) {
-            fs.writeFile(`${Date.now()}.json`, JSON.stringify({ games: this.games }), function (err) {
-                if (err) return console.log(err);
-                console.log(`[${'?'.red}] unable to save games ${err}`);
+            this.games.forEach(game => {
+                const saveable = { player: [...game.players], admin: game.admin, rounds: [...game.rounds] }
+                fs.writeFile(`${dir}/${game.id}.json`, JSON.stringify({ game: saveable }), function (err) {
+                    if (err) return console.log(err);
+                    console.log(`[${'?'.red}] unable to save games ${err}`);
+                });
             });
         }
     }
@@ -119,14 +122,14 @@ class Server {
             }
 
             files.forEach(function (file) {
-                const content = fs.readFileSync(file);
+                const content = fs.readFileSync(`${dir}/${file}`);
                 const json = JSON.parse(content);
-                if (!json.games) {
+                if (!json.game) {
                     console.log(`[${'?'.red}] invalid json ${file}`);
                     return false;
                 }
 
-                this.games = json.games;
+                this.games.push(json.game);
                 console.log(`[${'?'.green}] restored ${this.games.length} games`);
                 return true;
             });
