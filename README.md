@@ -6,6 +6,13 @@ Poker is a websocket based online poker app.
 
 Clone the git repository and run `yarn install` or `npm install`.
 
+```
+cd poker-server
+yarn install
+cd ../poker-client
+yarn install
+```
+
 ## :mag_right: Usage
 
 coming soon
