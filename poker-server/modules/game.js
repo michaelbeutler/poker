@@ -10,7 +10,7 @@ class Game {
         if (admin) { this.admin = socket };
         if (this.players.length < 8 && this.started === false) {
             this.players.push(socket);
-            console.log(`[${'+'.green}] ${socket.id} joined game ${this.id} (${this.players.length})`);
+            console.log(`[${'+'.green}] ${socket.id} joined game ${this.id} as ${admin ? "admin" : "user"} (${this.players.length})`);
 
             for (const room in socket.rooms) {
                 if (socket.id !== room) socket.leave(room);
