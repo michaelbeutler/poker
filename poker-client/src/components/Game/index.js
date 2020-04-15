@@ -14,7 +14,7 @@ import './game.scss';
 class Game extends Component {
     constructor(props) {
         super(props);
-        this.state = { socket: io.connect("http://tmr3:3001") };
+        this.state = { socket: io.connect("http://localhost:3001") };
 
         const { socket } = this.state;
         socket.on('SET_GAME', data => {
