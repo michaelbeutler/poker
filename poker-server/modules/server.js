@@ -1,9 +1,15 @@
+// utils
+String.prototype.trunc = String.prototype.trunc ||
+    function (n) {
+        return (this.length > n) ? this.substr(0, n - 1) + '&hellip;' : this;
+    };
+
 require('colors');
 const uuidv4 = require('uuid').v4;
 const express = require('express');
 const path = require('path');
 
-const Game = require('./game');
+const Game = require('./old.game');
 class Server {
     constructor() {
         this.port = process.env.PORT | 3001;
@@ -24,8 +30,18 @@ class Server {
             this.io.on('connection', socket => {
                 console.log(`[${'+'.green}] ${socket.id}`);
 
+                // login
+                socket.on('LOGIN', (data) => {
+                    if (data.id === socket.id && data.username.length > 0) {
+                        socket.username = data.username.trim().trunc(10);
+                        socket.login = true;
+                        console.log(`[${'L'.green}] ${socket.id} identified as ${socket.username.magenta}`);
+                    }
+                });
+
                 // create game
                 socket.on('CREATE_GAME', () => {
+                    if (!socket.login) { return false; }
                     const game = this.createGame();
                     if (socket.room && socket.room !== null) { this.getGameById(socket.room).leave(socket) };
                     game.join(socket, true);
@@ -33,6 +49,7 @@ class Server {
 
                 // create game
                 socket.on('JOIN_GAME', (data) => {
+                    if (!socket.login) { return false; }
                     console.log(`[${'D'.cyan}] ${socket.id} tried to join room with id ${data.id}`);
                     const game = this.getGameById(data.id)
                     if (game) {
@@ -91,12 +108,13 @@ class Server {
 
         if (this.games.length > 0) {
             this.games.forEach(game => {
-                console.log(`saving ${game.id}`)
+                console.log(`[${'?'.yellow}] saving game ${game.id} (${game.players.length})...`);
                 const saveable = {
                     id: game.id,
-                    started: false,
+                    started: game.started,
                     admin: game.admin.id,
-                    rounds: game.rounds
+                    rounds: game.rounds,
+                    maxPlayers: game.players.length
                 };
                 fs.writeFileSync(`${dir}/${game.id}.json`, JSON.stringify({ game: saveable }), function (err) {
                     if (err) return console.error(err);
@@ -147,6 +165,7 @@ class Server {
                 game.started = json.game.started;
                 game.admin = { id: json.game.admin };
                 game.rounds = json.game.rounds;
+                game.restore = { maxPlayers: json.game.maxPlayers };
                 restored.push(game);
 
                 fs.unlinkSync(`${dir}/${file}`);

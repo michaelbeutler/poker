@@ -6,6 +6,9 @@ import {
     ADD_ROUND,
     CLEAR_PLAYERS,
     REMOVE_ROUND,
+    ROUND_PLAYER_BET,
+    ROUND_SMALL_BLIND,
+    ROUND_BIG_BLIND,
     ROUND_HAND_OUT_CARDS,
     ROUND_FLOP,
     ROUND_TURN,
@@ -52,6 +55,26 @@ export function games(
         case REMOVE_ROUND:
             return Object.assign({}, state, {
                 rounds: state.filter(rounds => { return rounds !== action.rounds })
+            })
+        case ROUND_PLAYER_BET:
+            rounds[rounds.length - 1].players = action.players;
+
+            return Object.assign({}, state, {
+                rounds,
+            })
+        case ROUND_SMALL_BLIND:
+            rounds[rounds.length - 1].didSmallBlind = true;
+            rounds[rounds.length - 1].pot = action.pot;
+
+            return Object.assign({}, state, {
+                rounds,
+            })
+        case ROUND_BIG_BLIND:
+            rounds[rounds.length - 1].didBigBlind = true;
+            rounds[rounds.length - 1].pot = action.pot;
+
+            return Object.assign({}, state, {
+                rounds,
             })
         case ROUND_HAND_OUT_CARDS:
             rounds[rounds.length - 1].didHandOut = true;
