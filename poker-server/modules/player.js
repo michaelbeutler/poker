@@ -1,4 +1,4 @@
-require('../config');
+const { DEBUG } = require('../config');
 require('../utils');
 class Player {
     constructor(socket, username) {

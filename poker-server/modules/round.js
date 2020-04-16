@@ -4,8 +4,9 @@ require('../utils');
 require('../events');
 
 class Round {
-    constructor(gameId, players) {
+    constructor(io, gameId, players) {
         if (DEBUG) { console.log(`create round with ${players.length} players`.debug); }
+        this.io = io;
         this.pot = 0.0;
         this.didHandOutCards = false;
         this.didSmallBlind = false;
@@ -84,7 +85,7 @@ class Round {
             this.pot += player.bet;
             player.bet = 0;
         });
-        io.to(this.gameId).emit(UPDATE_POT, { pot: this.pot });
+        this.io.to(this.gameId).emit(UPDATE_POT, { pot: this.pot });
         return true;
     }
     start() {
@@ -126,31 +127,31 @@ class Round {
     smallBlind() {
         if (this.didSmallBlind) {
             console.log(`small blind already set`.warn);
-            io.to(this.gameId).emit(SMALL_BLIND_ERROR, { text: "small blind already set" });
+            this.io.to(this.gameId).emit(SMALL_BLIND_ERROR, { text: "small blind already set" });
             return false;
         }
         if (this.bet(this.players.filter(player => { return player.isSmallBlind })[0], this.smallBlindAmount)) {
-            io.to(this.gameId).emit(SMALL_BLIND);
+            this.io.to(this.gameId).emit(SMALL_BLIND);
             this.didSmallBlind = true;
             this.nextPlayer();
             return true;
         }
-        io.to(this.gameId).emit(SMALL_BLIND_ERROR, { text: "unkown" });
+        this.io.to(this.gameId).emit(SMALL_BLIND_ERROR, { text: "unkown" });
         return false;
     }
     bigBlind() {
         if (this.didBigBlind) {
             console.log(`big blind already set`.warn);
-            io.to(this.gameId).emit(BIG_BLIND_ERROR, { text: "big blind already set" });
+            this.io.to(this.gameId).emit(BIG_BLIND_ERROR, { text: "big blind already set" });
             return false;
         }
         if (this.bet(this.players.filter(player => { return player.isBigBlind })[0], this.bigBlindAmount)) {
-            io.to(this.gameId).emit(BIG_BLIND);
+            this.io.to(this.gameId).emit(BIG_BLIND);
             this.didBigBlind = true;
             this.nextPlayer();
             return true;
         }
-        io.to(this.gameId).emit(BIG_BLIND_ERROR, { text: "unkown" });
+        this.io.to(this.gameId).emit(BIG_BLIND_ERROR, { text: "unkown" });
         return false;
     }
     handOutCards() {
