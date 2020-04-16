@@ -10,6 +10,7 @@ class Player {
         this.isSmallBlind = false;
         this.isBigBlind = false;
 
+        this.isReady = false;
         this.isCurrentPlayer = false;
     }
     privateEmit(event, data = {}) {
