@@ -1,5 +1,7 @@
 # :spades: Poker
 
+![](screenshots/poker-table.png)
+
 Poker is a websocket based online poker app.
 
 ## :rocket: Installation
