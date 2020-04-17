@@ -1,4 +1,4 @@
 const PORT = 3001;
-const DEBUG = true;
+const DEBUG = false;
 
 module.exports = { PORT, DEBUG };

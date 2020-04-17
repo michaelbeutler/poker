@@ -57,7 +57,7 @@ describe('game creation', () => {
       done();
     });
   });
-  test('should be able to create game with valid login', (done) => {
+  test('should be able to create game', (done) => {
     socket.emit('LOGIN', { username: "test" });
     socket.emit('CREATE_GAME');
     socket.once('CREATE_GAME_SUCCESS', (data) => {
@@ -93,15 +93,18 @@ describe('joining game', () => {
       done();
     });
   });
-  test('should be able to join game with valid login', (done) => {
+  test('should be able to join game', (done) => {
     socket.emit('LOGIN', { username: "test" });
     socket.emit('CREATE_GAME');
     socket.once('CREATE_GAME_SUCCESS', (data) => {
-      socket.emit('JOIN_GAME', { id: data.id });
-      socket.once('JOIN_GAME_SUCCESS', (data) => {
-        expect(data.id).toBeDefined();
-        done();
-      });
+      socket.emit('LEAVE_GAME', { id: data.id });
+      socket.once('LEAVE_GAME_SUCCESS', (data) => {
+        socket.emit('JOIN_GAME', { id: data.id });
+        socket.once('JOIN_GAME_SUCCESS', (data) => {
+          expect(data.id).toBeDefined();
+          done();
+        });
+      })
     });
   });
 });
@@ -132,14 +135,113 @@ describe('leaving game', () => {
       done();
     });
   });
-  test('should be able to leave game with valid login', (done) => {
+  test('should be able to leave game', (done) => {
     socket.emit('LOGIN', { username: "test" });
     socket.emit('CREATE_GAME');
     socket.once('CREATE_GAME_SUCCESS', (data) => {
-      socket.emit('JOIN_GAME', { id: data.id });
-      socket.once('JOIN_GAME_SUCCESS', (data) => {
+      socket.emit('LEAVE_GAME', { id: data.id });
+      socket.once('LEAVE_GAME_SUCCESS', (data) => {
+        expect(data.id).toBeDefined();
+        done();
+      });
+    });
+  });
+  test('should not be able to leave game if player not joined', (done) => {
+    socket.emit('LOGIN', { username: "test" });
+    socket.emit('CREATE_GAME');
+    socket.once('CREATE_GAME_SUCCESS', (data) => {
+      socket.emit('LEAVE_GAME', { id: data.id });
+      socket.once('LEAVE_GAME_SUCCESS', (data) => {
         socket.emit('LEAVE_GAME', { id: data.id });
-        socket.once('LEAVE_GAME_SUCCESS', (data) => {
+        socket.once('LEAVE_GAME_ERROR', (data) => {
+          expect(data.text).toBe("player is not in this rooms");
+          done();
+        });
+      });
+    });
+  });
+});
+
+describe('ready status', () => {
+  test('should not be able to be ready without login', (done) => {
+    socket.emit('PLAYER_READY', { id: "random id" });
+    socket.once('LOGIN_REQUIRED', (data) => {
+      expect(data.text).toBe("login required");
+      done();
+    });
+  });
+  test('should not be able to be ready without game id', (done) => {
+    socket.emit('LOGIN', { username: "test" });
+    socket.emit('CREATE_GAME');
+    socket.emit('PLAYER_READY');
+    socket.once('PLAYER_READY_ERROR', (data) => {
+      expect(data.text).toBe("game id not set");
+      done();
+    });
+  });
+  test('should not be able to be ready with invalid game id', (done) => {
+    socket.emit('LOGIN', { username: "test" });
+    socket.emit('CREATE_GAME');
+    socket.emit('PLAYER_READY', { id: "randomId" });
+    socket.once('PLAYER_READY_ERROR', (data) => {
+      expect(data.text).toBe("no game found with id randomId");
+      done();
+    });
+  });
+  test('should be able to be ready', (done) => {
+    socket.emit('LOGIN', { username: "test" });
+    socket.emit('CREATE_GAME');
+    socket.once('CREATE_GAME_SUCCESS', (data) => {
+      socket.emit('PLAYER_READY', { id: data.id });
+      socket.once('PLAYER_READY_SUCCESS', (data) => {
+        expect(data.id).toBeDefined();
+        done();
+      })
+    });
+  });
+  test('should not be able to be not ready without login', (done) => {
+    socket.emit('PLAYER_READY', { id: "random id" });
+    socket.once('LOGIN_REQUIRED', (data) => {
+      expect(data.text).toBe("login required");
+      done();
+    });
+  });
+  test('should not be able to be not ready without game id', (done) => {
+    socket.emit('LOGIN', { username: "test" });
+    socket.emit('CREATE_GAME');
+    socket.emit('PLAYER_NOT_READY');
+    socket.once('PLAYER_NOT_READY_ERROR', (data) => {
+      expect(data.text).toBe("game id not set");
+      done();
+    });
+  });
+  test('should not be able to be not ready with invalid game id', (done) => {
+    socket.emit('LOGIN', { username: "test" });
+    socket.emit('CREATE_GAME');
+    socket.emit('PLAYER_NOT_READY', { id: "randomId" });
+    socket.once('PLAYER_NOT_READY_ERROR', (data) => {
+      expect(data.text).toBe("no game found with id randomId");
+      done();
+    });
+  });
+  test('should be able to be not ready', (done) => {
+    socket.emit('LOGIN', { username: "test" });
+    socket.emit('CREATE_GAME');
+    socket.once('CREATE_GAME_SUCCESS', (data) => {
+      socket.emit('PLAYER_NOT_READY', { id: data.id });
+      socket.once('PLAYER_NOT_READY_SUCCESS', (data) => {
+        expect(data.id).toBeDefined();
+        done();
+      });
+    });
+  });
+  test('should be to start after 1 second when all players are ready', (done) => {
+    socket.emit('LOGIN', { username: "test" });
+    socket.emit('CREATE_GAME');
+    socket.once('CREATE_GAME_SUCCESS', (data) => {
+      socket.emit('PLAYER_READY', { id: data.id });
+      socket.once('PLAYER_READY_SUCCESS', (data) => {
+        socket.once('GAME_START', (data) => {
           expect(data.id).toBeDefined();
           done();
         });
