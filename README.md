@@ -1,7 +1,7 @@
 [![MIT license](https://img.shields.io/badge/License-MIT-blue.svg)](https://lbesson.mit-license.org/)
 [![Open Source Love png2](https://badges.frapsoft.com/os/v2/open-source.png?v=103)](https://github.com/ellerbrock/open-source-badges/)
-[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://GitHub.com/MichiBeutler/Instagram-Clone/graphs/commit-activity)
-[![GitHub contributors](https://img.shields.io/github/contributors/MichiBeutler/poker.svg)](https://GitHub.com/MichiBeutler/Instagram-Clone/graphs/contributors/)
+[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://GitHub.com/MichiBeutler/poker/graphs/commit-activity)
+[![GitHub contributors](https://img.shields.io/github/contributors/MichiBeutler/poker.svg)](https://GitHub.com/MichiBeutler/poker/graphs/contributors/)
 
 # :spades: Poker
 
