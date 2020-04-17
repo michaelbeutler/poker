@@ -240,7 +240,7 @@ describe('ready status', () => {
     socket.emit('CREATE_GAME');
     socket.once('CREATE_GAME_SUCCESS', (data) => {
       socket.emit('PLAYER_READY', { id: data.id });
-      socket.once('PLAYER_READY_SUCCESS', (data) => {
+      socket.once('PLAYER_READY_SUCCESS', () => {
         socket.once('GAME_START', (data) => {
           expect(data.id).toBeDefined();
           done();

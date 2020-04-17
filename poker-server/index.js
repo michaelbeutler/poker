@@ -6,6 +6,7 @@ const {
     LEAVE_GAME, LEAVE_GAME_ERROR, LEAVE_GAME_SUCCESS,
     PLAYER_READY, PLAYER_READY_ERROR, PLAYER_READY_SUCCESS,
     PLAYER_NOT_READY, PLAYER_NOT_READY_ERROR, PLAYER_NOT_READY_SUCCESS,
+    GAME_START
 } = require('./events');
 const Player = require('./modules/player');
 const Game = require('./modules/game');
@@ -36,7 +37,7 @@ function getGameById(id) {
 io.on('connection', socket => {
 
     // login
-    socket.on(LOGIN, (data) => {
+    socket.on(LOGIN, async (data) => {
         if (data && data.username.length > 0) {
             const username = data.username.trim().trunc(10);
             if (DEBUG) { console.log(`login ${username}`.debug) }
@@ -50,7 +51,7 @@ io.on('connection', socket => {
     });
 
     // create game
-    socket.on(CREATE_GAME, () => {
+    socket.on(CREATE_GAME, async () => {
         if (!socket.login) {
             io.to(socket.id).emit(LOGIN_REQUIRED, { text: "login required" });
             return false;
@@ -69,7 +70,7 @@ io.on('connection', socket => {
     });
 
     // join game
-    socket.on(JOIN_GAME, (data) => {
+    socket.on(JOIN_GAME, async (data) => {
         if (!socket.login) {
             io.to(socket.id).emit(LOGIN_REQUIRED, { text: "login required" });
             return false;
@@ -86,7 +87,7 @@ io.on('connection', socket => {
         return false;
     });
 
-    socket.on(LEAVE_GAME, (data) => {
+    socket.on(LEAVE_GAME, async (data) => {
         if (!socket.login) {
             io.to(socket.id).emit(LOGIN_REQUIRED, { text: "login required" });
             return false;
@@ -103,7 +104,7 @@ io.on('connection', socket => {
         return false;
     });
 
-    socket.on(PLAYER_READY, (data) => {
+    socket.on(PLAYER_READY, async (data) => {
         if (!socket.login) {
             io.to(socket.id).emit(LOGIN_REQUIRED, { text: "login required" });
             return false;
@@ -114,13 +115,14 @@ io.on('connection', socket => {
             if (!game) { io.to(socket.id).emit(PLAYER_READY_ERROR, { text: `no game found with id ${data.id}` }); return false; }
             if (game.ready(getPlayerById(socket.id))) {
                 io.to(socket.id).emit(PLAYER_READY_SUCCESS, { id: data.id });
+                setTimeout(() => { game.start(); }, 2000)
                 return true;
             } else { io.to(socket.id).emit(PLAYER_NOT_READY_ERROR, { text: "player is not in this rooms" }); }
         } else { io.to(socket.id).emit(PLAYER_READY_ERROR, { text: "game id not set" }); }
         return false;
     });
 
-    socket.on(PLAYER_NOT_READY, (data) => {
+    socket.on(PLAYER_NOT_READY, async (data) => {
         if (!socket.login) {
             io.to(socket.id).emit(LOGIN_REQUIRED, { text: "login required" });
             return false;

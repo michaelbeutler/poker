@@ -54,7 +54,6 @@ class Game {
         return true;
     }
     ready(player) {
-        const self = this;
         if (this.isStarted) { socket.privateEmit(PLAYER_READY_ERROR, { text: "game already started" }); return false; }
         if (!this.playerIsInGame(player)) {
             // player not in this game
@@ -62,14 +61,6 @@ class Game {
         }
         player.isReady = true;
         this.broadcast(PLAYER_READY, { id: player.id, username: player.username });
-
-        console.log(self.players.filter(p => { return !p.isReady }).length === 0);
-        () => {
-            console.log(`start game ${self.id} in 1 second if still all players are ready...`)
-            setTimeout(() => {
-                if (self.players.filter(p => { return !p.isReady }).length === 0) { self.start(); }
-            }, 1000);
-        }
         return true;
     }
     notReady(player) {
