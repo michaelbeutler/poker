@@ -2,7 +2,7 @@
 
 ![](screenshots/poker-table.png)
 
-Poker is a websocket based online poker app.
+Poker is a websocket based online poker app for you to play against your friends. I just wanted to know poker and decided that the best way to learn it, is to build my own poker application. 
 
 ## :rocket: Installation
 
