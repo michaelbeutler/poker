@@ -1,3 +1,8 @@
+[![MIT license](https://img.shields.io/badge/License-MIT-blue.svg)](https://lbesson.mit-license.org/)
+[![Open Source Love png2](https://badges.frapsoft.com/os/v2/open-source.png?v=103)](https://github.com/ellerbrock/open-source-badges/)
+[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://GitHub.com/MichiBeutler/Instagram-Clone/graphs/commit-activity)
+[![GitHub contributors](https://img.shields.io/github/contributors/MichiBeutler/poker.svg)](https://GitHub.com/MichiBeutler/Instagram-Clone/graphs/contributors/)
+
 # :spades: Poker
 
 ![](screenshots/poker-table.png)
@@ -51,7 +56,7 @@ Pull requests are welcome. For major changes, please open an issue first to disc
 Please make sure to update tests as appropriate.
 
 ## :page_with_curl: License
-[MIT](https://choosealicense.com/licenses/mit/)
+This project is licensed under the MIT License - see the [LICENSE](https://github.com/MichiBeutler/poker/blob/master/LICENSE) file for details
 
 ## :ok_hand: Acknowledgments
 * play poker with your friends :stuck_out_tongue_closed_eyes:
