@@ -1,11 +1,17 @@
-require('../config');
+const { DEBUG } = require('../config');
 require('../utils');
 
-require('../events');
+const {
+    UPDATE_PLAYERS,
+    SMALL_BLIND, SMALL_BLIND_ERROR,
+    BIG_BLIND, BIG_BLIND_ERROR,
+    HAND_OUT_CARDS, HAND_OUT_CARDS_ERROR
+} = require('../events');
 
 class Round {
     constructor(io, gameId, players) {
         if (DEBUG) { console.log(`create round with ${players.length} players`.debug); }
+        this.gameId = gameId;
         this.io = io;
         this.pot = 0.0;
         this.didHandOutCards = false;
@@ -54,18 +60,20 @@ class Round {
                 this.players[randomIndex + 2].isBigBlind = true;
             } else { this.players[0].isBigBlind = true; }
         }
+        this.smallBlind();
+        this.bigBlind();
         return true;
     }
     nextPlayer() {
-        const currentPlayerIndex = this.players.findIndex(player => { player.isCurrentPlayer });
+        const currentPlayerIndex = this.players.findIndex(player => { return player.isCurrentPlayer; });
         this.players[currentPlayerIndex].isCurrentPlayer = false;
 
         if (currentPlayerIndex + 1 >= this.players.length) {
             console.log(`next player: ${this.players[0].username}`.data);
             this.players[0].isCurrentPlayer = true;
-        } else { 
+        } else {
             console.log(`next player: ${this.players[currentPlayerIndex + 1].username}`.data);
-            this.players[currentPlayerIndex + 1].isCurrentPlayer = true; 
+            this.players[currentPlayerIndex + 1].isCurrentPlayer = true;
         }
         return this.emitPlayers();
     }

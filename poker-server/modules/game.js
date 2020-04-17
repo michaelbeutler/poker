@@ -5,7 +5,7 @@ const {
     JOIN_GAME, LEAVE_GAME,
     PLAYER_READY, PLAYER_READY_ERROR,
     PLAYER_NOT_READY, PLAYER_NOT_READY_ERROR,
-    GAME_START
+    GAME_START, GAME_NEW_ROUND
 } = require('../events');
 require('../utils');
 
@@ -26,6 +26,9 @@ class Game {
     }
     playerIsInGame(player) {
         return this.players.filter(p => { return p.socket.id === player.socket.id }).length === 1;
+    }
+    getCurrentRound() {
+        return this.rounds[this.rounds.length -1];
     }
     addPlayer(player) {
         if (DEBUG) { console.log(`add player ${player.username} to game`.debug) };
@@ -80,6 +83,9 @@ class Game {
         // can start
         console.log(`game ${this.id} started`);
         this.broadcast(GAME_START, { id: this.id });
+        if (this.addRound()) {
+            this.broadcast(GAME_NEW_ROUND, { id: this.id });
+        }
     }
 }
 module.exports = Game;
