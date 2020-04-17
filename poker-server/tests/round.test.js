@@ -18,7 +18,7 @@ beforeEach((done) => {
     done();
 });
 
-describe('round has correct stock', () => {
+describe('round handles correct', () => {
     test('should be able to add round to game', () => {
         expect(game.rounds.length).toBe(1);
     })

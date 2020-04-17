@@ -5,8 +5,7 @@ const {
     JOIN_GAME, JOIN_GAME_ERROR, JOIN_GAME_SUCCESS,
     LEAVE_GAME, LEAVE_GAME_ERROR, LEAVE_GAME_SUCCESS,
     PLAYER_READY, PLAYER_READY_ERROR, PLAYER_READY_SUCCESS,
-    PLAYER_NOT_READY, PLAYER_NOT_READY_ERROR, PLAYER_NOT_READY_SUCCESS,
-    GAME_START
+    PLAYER_NOT_READY, PLAYER_NOT_READY_ERROR, PLAYER_NOT_READY_SUCCESS
 } = require('./events');
 const Player = require('./modules/player');
 const Game = require('./modules/game');
@@ -42,7 +41,7 @@ io.on('connection', socket => {
             const username = data.username.trim().trunc(10);
             if (DEBUG) { console.log(`login ${username}`.debug) }
 
-            players.push(new Player(socket, username));
+            players.push(new Player(io, socket, username));
             socket.login = true;
             io.to(socket.id).emit(LOGIN_SUCCESS, { username: username });
         } else {
