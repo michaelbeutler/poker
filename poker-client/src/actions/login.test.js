@@ -1,6 +1,6 @@
 import * as actions from './login'
 
-describe('actions', () => {
+describe('actions for login', () => {
     it('should create an action to set login success', () => {
         const data = {
             username: "Test",

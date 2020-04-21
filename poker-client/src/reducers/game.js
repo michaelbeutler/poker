@@ -1,16 +1,46 @@
 import {
-    
+    CREATE_GAME_SUCCESS, CREATE_GAME_ERROR, JOIN_GAME_SUCCESS, JOIN_GAME_ERROR, LEAVE_GAME_SUCCESS, LEAVE_GAME_ERROR
 } from '../actions/game'
-export function games(
+export function game(
     state = {
         id: null,
         didStart: false,
         players: [],
-        rounds: []
+        rounds: [],
+        isError: false,
+        isSuccess: false,
+        errorText: null
     },
     action
 ) {
     switch (action.type) {
+        case JOIN_GAME_SUCCESS:
+        case CREATE_GAME_SUCCESS:
+            return Object.assign({}, state, {
+                isError: false,
+                isSuccess: true,
+                id: action.id
+            });
+        case JOIN_GAME_ERROR:
+        case CREATE_GAME_ERROR:
+            return Object.assign({}, state, {
+                isError: true,
+                isSuccess: false,
+                errorText: action.text
+            });
+        case LEAVE_GAME_SUCCESS:
+            return Object.assign({}, state, {
+                id: null,
+                isError: false,
+                isSuccess: false
+            });
+        case LEAVE_GAME_ERROR:
+            return Object.assign({}, state, {
+                id: null,
+                isError: true,
+                isSuccess: false,
+                errorText: action.text
+            });
         default:
             return state;
     }

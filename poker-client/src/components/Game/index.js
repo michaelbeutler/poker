@@ -7,6 +7,7 @@ import {
 } from '../../actions/login'
 
 import './game.scss';
+import { CREATE_GAME, CREATE_GAME_ERROR, CREATE_GAME_SUCCESS, createGameSuccess, createGameError, JOIN_GAME, JOIN_GAME_ERROR, JOIN_GAME_SUCCESS, joinGameSuccess, joinGameError, LEAVE_GAME, LEAVE_GAME_SUCCESS, LEAVE_GAME_ERROR, leaveGameError, leaveGameSuccess } from '../../actions/game';
 
 /**
  * Game Component
@@ -32,31 +33,72 @@ class Game extends Component {
             this.props.dispatch(loginRequired(data));
         });
 
+
+        // create game was successfully
+        socket.on(CREATE_GAME_SUCCESS, data => {
+            this.props.dispatch(createGameSuccess(data));
+        });
+        // create game was not successfully
+        socket.on(CREATE_GAME_ERROR, data => {
+            this.props.dispatch(createGameError(data));
+        });
+
+
+        // join game was successfully
+        socket.on(JOIN_GAME_SUCCESS, data => {
+            this.props.dispatch(joinGameSuccess(data));
+        });
+        // join game was not successfully
+        socket.on(JOIN_GAME_ERROR, data => {
+            this.props.dispatch(joinGameError(data));
+        });
+
+
+        // leave game was successfully
+        socket.on(LEAVE_GAME_SUCCESS, data => {
+            this.props.dispatch(leaveGameSuccess(data));
+        });
+        // leave game was not successfully
+        socket.on(LEAVE_GAME_ERROR, data => {
+            this.props.dispatch(leaveGameError(data));
+        });
+
         this.emit = this.emit.bind(this);
     }
-    emit(event, data) {
+    emit(event, data = {}) {
         const { socket } = this.state;
-        Object.assign(data, { id: socket.id });
+        Object.assign(data, { socketId: socket.id });
         socket.emit(event, data);
     }
     render() {
         if (this.props.login.isLogin) {
-            return <>logged in as {this.props.username}</>;
+            if (this.props.game.isSuccess) {
+                return <>
+                    {this.props.game.id}<br />
+                    <button onClick={() => { this.emit(LEAVE_GAME, { id: this.props.game.id }) }}>Leave</button>
+                </>;
+            }
+            return <>
+                logged in as {this.props.username}<br />
+                <button onClick={() => { this.emit(CREATE_GAME) }}>Create</button>
+                <button onClick={() => { this.emit(JOIN_GAME, { id: prompt() }) }}>Join</button><br />
+                {this.props.game.isError ? this.props.game.errorText : ""}
+            </>;
         } else if (this.props.login.isError) {
             return <>
-                <button onClick={() => {this.emit(LOGIN, { username: prompt() })}}>Login</button>
+                <button onClick={() => { this.emit(LOGIN, { username: prompt() }) }}>Login</button>
                 ERROR: {this.props.login.errorText}
             </>;
         } else {
-            return <><button onClick={() => {this.emit(LOGIN, { username: prompt() })}}>Login</button></>;
+            return <><button onClick={() => { this.emit(LOGIN, { username: prompt() }) }}>Login</button></>;
         }
     }
 };
 
 function mapStateToProps(state) {
-    const { games, login } = state;
+    const { game, login } = state;
     return {
-        game: games,
+        game,
         login: { ...login },
         username: login.username,
     }

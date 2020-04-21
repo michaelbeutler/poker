@@ -36,3 +36,43 @@ export const SMALL_BLIND_ERROR = 'SMALL_BLIND_ERROR';
 export const BIG_BLIND = 'BIG_BLIND';                          // {}
 export const BIG_BLIND_ERROR = 'BIG_BLIND_ERROR';
 
+export const createGameSuccess = data => {
+    return {
+        type: CREATE_GAME_SUCCESS,
+        id: data.id
+    }
+}
+
+export const createGameError = data => {
+    return {
+        type: CREATE_GAME_ERROR,
+        text: data.text
+    }
+}
+
+export const joinGameSuccess = data => {
+    return {
+        type: JOIN_GAME_SUCCESS,
+        id: data.id
+    }
+}
+
+export const joinGameError = data => {
+    return {
+        type: JOIN_GAME_ERROR,
+        text: data.text
+    }
+}
+
+export const leaveGameSuccess = data => {
+    return {
+        type: LEAVE_GAME_SUCCESS
+    }
+}
+
+export const leaveGameError = data => {
+    return {
+        type: LEAVE_GAME_ERROR,
+        text: data.text
+    }
+}
