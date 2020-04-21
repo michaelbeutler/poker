@@ -10,7 +10,6 @@ export function games(
     },
     action
 ) {
-    const { rounds, players } = state;
     switch (action.type) {
         default:
             return state;

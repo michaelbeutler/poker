@@ -6,7 +6,6 @@ import {
     LOGIN, LOGIN_SUCCESS, LOGIN_ERROR, LOGIN_REQUIRED, loginSuccess, loginError, loginRequired
 } from '../../actions/login'
 
-import Card, { BackCard } from '../Card';
 import './game.scss';
 
 /**

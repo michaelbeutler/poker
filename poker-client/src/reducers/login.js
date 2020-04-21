@@ -21,17 +21,12 @@ export function login(
                 username: action.username,
                 isError: false
             });
+        case LOGIN_REQUIRED:
         case LOGIN_ERROR:
             return Object.assign({}, state, {
                 isLogin: false,
                 isError: true,
                 errorText: action.text
-            });
-        case LOGIN_ERROR:
-            return Object.assign({}, state, {
-                isLogin: false,
-                errorText: action.text,
-                isError: true
             });
         default:
             return state;
