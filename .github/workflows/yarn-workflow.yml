@@ -1,28 +1,31 @@
 name: CI
 on: [push]
 jobs:
-  build:
-    name: Test
+  build-server:
+    name: Test Server
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
-      - run: cd poker-server
       - uses: borales/actions-yarn@v2.0.0
         with:
-          cmd: install
+          cmd: --cwd poker-server install
       - uses: borales/actions-yarn@v2.0.0
         with:
-          cmd: build
+          cmd: --cwd poker-server build
       - uses: borales/actions-yarn@v2.0.0
         with:
-          cmd: test
-      - run: cd poker-client
+          cmd: --cwd poker-server test
+  build-client:
+    name: Test Client
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
       - uses: borales/actions-yarn@v2.0.0
         with:
-          cmd: install
+          cmd: --cwd poker-client install
       - uses: borales/actions-yarn@v2.0.0
         with:
-          cmd: build
+          cmd: --cwd poker-client build
       - uses: borales/actions-yarn@v2.0.0
         with:
-          cmd: test
+          cmd: --cwd poker-client test
