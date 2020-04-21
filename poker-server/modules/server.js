@@ -32,7 +32,7 @@ class Server {
 
                 // login
                 socket.on('LOGIN', (data) => {
-                    if (data.id === socket.id && data.username.length > 0) {
+                    if (data.id === socket.id && data.username && data.username.length > 0) {
                         socket.username = data.username.trim().trunc(10);
                         socket.login = true;
                         console.log(`[${'L'.green}] ${socket.id} identified as ${socket.username.magenta}`);

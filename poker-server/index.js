@@ -1,3 +1,4 @@
+require('./utils');
 const { DEBUG, PORT } = require('./config');
 const {
     LOGIN, LOGIN_REQUIRED, LOGIN_ERROR, LOGIN_SUCCESS,
@@ -37,14 +38,15 @@ io.on('connection', socket => {
 
     // login
     socket.on(LOGIN, async (data) => {
-        if (data && data.username.length > 0) {
+        if (data && data.username && data.username.length > 0 && !data.username.isEmpty()) {
             const username = data.username.trim().trunc(10);
             if (DEBUG) { console.log(`login ${username}`.debug) }
 
             players.push(new Player(io, socket, username));
             socket.login = true;
-            io.to(socket.id).emit(LOGIN_SUCCESS, { username: username });
+            io.to(socket.id).emit(LOGIN_SUCCESS, { username });
         } else {
+            if (DEBUG) { console.log(`invalid username`.debug) }
             io.to(socket.id).emit(LOGIN_ERROR, { text: "invalid username" });
         }
     });
