@@ -57,6 +57,14 @@ export const joinGameSuccess = data => {
     }
 }
 
+export const joinGame = data => {
+    return {
+        type: JOIN_GAME,
+        id: data.id, 
+        username: data.username
+    }
+}
+
 export const joinGameError = data => {
     return {
         type: JOIN_GAME_ERROR,

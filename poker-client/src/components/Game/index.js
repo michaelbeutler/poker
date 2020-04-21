@@ -7,7 +7,7 @@ import {
 } from '../../actions/login'
 
 import './game.scss';
-import { CREATE_GAME, CREATE_GAME_ERROR, CREATE_GAME_SUCCESS, createGameSuccess, createGameError, JOIN_GAME, JOIN_GAME_ERROR, JOIN_GAME_SUCCESS, joinGameSuccess, joinGameError, LEAVE_GAME, LEAVE_GAME_SUCCESS, LEAVE_GAME_ERROR, leaveGameError, leaveGameSuccess } from '../../actions/game';
+import { CREATE_GAME, CREATE_GAME_ERROR, CREATE_GAME_SUCCESS, createGameSuccess, createGameError, JOIN_GAME, JOIN_GAME_ERROR, JOIN_GAME_SUCCESS, joinGame, joinGameSuccess, joinGameError, LEAVE_GAME, LEAVE_GAME_SUCCESS, LEAVE_GAME_ERROR, leaveGameError, leaveGameSuccess } from '../../actions/game';
 
 /**
  * Game Component
@@ -45,6 +45,9 @@ class Game extends Component {
 
 
         // join game was successfully
+        socket.on(JOIN_GAME, data => {
+            this.props.dispatch(joinGame(data));
+        });
         socket.on(JOIN_GAME_SUCCESS, data => {
             this.props.dispatch(joinGameSuccess(data));
         });
@@ -75,6 +78,9 @@ class Game extends Component {
             if (this.props.game.isSuccess) {
                 return <>
                     {this.props.game.id}<br />
+                    {this.props.game.players.map(player => (
+                        player.username
+                    ))}<br />
                     <button onClick={() => { this.emit(LEAVE_GAME, { id: this.props.game.id }) }}>Leave</button>
                 </>;
             }
