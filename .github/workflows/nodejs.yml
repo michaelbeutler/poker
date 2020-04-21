@@ -27,5 +27,8 @@ jobs:
     - run: cd poker-server
     - run: npm run build --if-present
     - run: npm test
+    - run: cd ../poker-client
+    - run: npm run build --if-present
+    - run: npm test
       env:
         CI: true
