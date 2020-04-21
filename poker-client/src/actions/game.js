@@ -1,98 +1,38 @@
-export const SET_GAME = 'SET_GAME';
-export const START_GAME = 'START_GAME';
+export const CREATE_GAME = 'CREATE_GAME';
+export const CREATE_GAME_ERROR = 'CREATE_GAME_ERROR';
+export const CREATE_GAME_SUCCESS = 'CREATE_GAME_SUCCESS';
 
-export const ADD_PLAYER = 'ADD_PLAYER';
-export const REMOVE_PLAYER = 'REMOVE_PLAYER';
-export const CLEAR_PLAYERS = 'CLEAR_PLAYERS';
+export const JOIN_GAME = 'JOIN_GAME';
+export const JOIN_GAME_ERROR = 'JOIN_GAME_ERROR';
+export const JOIN_GAME_SUCCESS = 'JOIN_GAME_SUCCESS';
 
-export const ADD_ROUND = 'ADD_ROUND';
-export const REMOVE_ROUND = 'REMOVE_ROUND';
+export const LEAVE_GAME = 'LEAVE_GAME';
+export const LEAVE_GAME_ERROR = 'LEAVE_GAME_ERROR';
+export const LEAVE_GAME_SUCCESS = 'LEAVE_GAME_SUCCESS';
 
-export const ROUND_PLAYER_BET = 'ROUND_PLAYER_BET';
-export const ROUND_SMALL_BLIND = 'ROUND_SMALL_BLIND';
-export const ROUND_BIG_BLIND = 'ROUND_BIG_BLIND';
-export const ROUND_HAND_OUT_CARDS = 'ROUND_HAND_OUT_CARDS';
-export const ROUND_FLOP = 'ROUND_FLOP';
-export const ROUND_TURN = 'ROUND_TURN';
-export const ROUND_RIVER = 'ROUND_RIVER';
+export const PLAYER_READY = 'PLAYER_READY';
+export const PLAYER_READY_ERROR = 'PLAYER_READY_ERROR';
+export const PLAYER_READY_SUCCESS = 'PLAYER_READY_SUCCESS';
 
-export function setGame(id, admin) {
-    return {
-        type: SET_GAME,
-        game: { id, admin }
-    }
-}
+export const PLAYER_NOT_READY = 'PLAYER_NOT_READY';
+export const PLAYER_NOT_READY_ERROR = 'PLAYER_NOT_READY_ERROR';
+export const PLAYER_NOT_READY_SUCCESS = 'PLAYER_NOT_READY_SUCCESS';
 
-export function startGame() {
-    return {
-        type: START_GAME
-    }
-}
+export const GAME_START = 'GAME_START';
+export const GAME_NEW_ROUND = 'GAME_NEW_ROUND';
 
-export function addPlayer(player) {
-    return {
-        type: ADD_PLAYER,
-        player
-    }
-}
+export const UPDATE_PLAYERS = 'UPDATE_PLAYERS';                // {players: []}
+export const UPDATE_PLAYERS_ERROR = 'UPDATE_PLAYERS_ERROR';
 
-export function clearPlayers() {
-    return {
-        type: CLEAR_PLAYERS
-    }
-}
+export const UPDATE_POT = 'UPDATE_POT';                        // {pot: n}
+export const UPDATE_POT_ERROR = 'UPDATE_POT_ERROR';
 
-export function addRound(round) {
-    return {
-        type: ADD_ROUND,
-        round
-    }
-}
+export const HAND_OUT_CARDS = 'HAND_OUT_CARDS';                // {cards: []}
+export const HAND_OUT_CARDS_ERROR = 'HAND_OUT_CARDS_ERROR';
 
-export function playerBet(players) {
-    return {
-        type: ROUND_PLAYER_BET,
-        players
-    }
-}
+export const SMALL_BLIND = 'SMALL_BLIND';                      // {}
+export const SMALL_BLIND_ERROR = 'SMALL_BLIND_ERROR';
 
-export function smallBlind(pot) {
-    return {
-        type: ROUND_SMALL_BLIND,
-        pot
-    }
-}
+export const BIG_BLIND = 'BIG_BLIND';                          // {}
+export const BIG_BLIND_ERROR = 'BIG_BLIND_ERROR';
 
-export function bigBlind(pot) {
-    return {
-        type: ROUND_BIG_BLIND,
-        pot
-    }
-}
-
-export function handOutCards(cards) {
-    return {
-        type: ROUND_HAND_OUT_CARDS,
-        cards
-    }
-}
-
-export function roundFlop(cards) {
-    return {
-        type: ROUND_FLOP,
-        cards
-    }
-}
-
-export function roundTurn(cards) {
-    return {
-        type: ROUND_TURN,
-        cards
-    }
-}
-export function roundRiver(cards) {
-    return {
-        type: ROUND_RIVER,
-        cards
-    }
-}
