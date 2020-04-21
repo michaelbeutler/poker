@@ -1,4 +1,4 @@
-name: CI
+name: Test server and client
 on: [push]
 jobs:
   build-server:
@@ -12,6 +12,10 @@ jobs:
           node-version: '12.x'
       - name: Install dependencies
         run: yarn install
+      - name: Build
+        run: yarn build
+      - name: Test
+        run: yarn test
   build-client:
     name: Test Client
     runs-on: ubuntu-latest
@@ -23,3 +27,7 @@ jobs:
           node-version: '12.x'
       - name: Install dependencies
         run: yarn install
+      - name: Build
+        run: yarn build
+      - name: Test
+        run: yarn test
