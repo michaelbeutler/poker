@@ -19,6 +19,13 @@ class Game extends Component {
         this.state = { socket: io.connect("http://localhost:3001") };
         const { socket } = this.state;
 
+        socket.on('reconnect', numberOfAttempts => {
+            if (this.props.login.isLogin) {
+                this.emit(LOGIN, { username: this.props.login.username });
+                alert(`reconnected after ${numberOfAttempts} tries`);
+            }
+        });
+
         // login was successfully
         socket.on(LOGIN_SUCCESS, data => {
             Object.assign(data, { id: socket.id });
