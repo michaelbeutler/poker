@@ -36,6 +36,8 @@ class Game {
             // player is already in the game
             return false;
         }
+
+        // notify each player in current game that a player joined
         this.players.forEach(p => {
             player.privateEmit(JOIN_GAME, { id: p.id, username: p.username });
         });
