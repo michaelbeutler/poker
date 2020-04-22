@@ -1,4 +1,4 @@
-name: Test server and client
+name: CI
 on: [push]
 jobs:
   build-server:
