@@ -1,7 +1,7 @@
 import {
     LOGIN_SUCCESS, LOGIN_ERROR, LOGIN_REQUIRED
 } from '../actions/login'
-export function login(
+const login = (
     state = {
         id: null,
         isLogin: false,
@@ -11,7 +11,7 @@ export function login(
         errorText: null
     },
     action
-) {
+) => {
     switch (action.type) {
         case LOGIN_SUCCESS:
             return Object.assign({}, state, {
@@ -32,3 +32,4 @@ export function login(
             return state;
     }
 }
+export default login;

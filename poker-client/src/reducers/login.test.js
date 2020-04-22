@@ -1,9 +1,10 @@
-import { login } from './login'
+import login from './login'
 import * as types from '../actions/login'
+const reducer = login;
 
 describe('login reducer', () => {
     it('should return the initial state', () => {
-        expect(login(undefined, {})).toEqual(
+        expect(reducer(undefined, {})).toEqual(
             {
                 id: null,
                 isLogin: false,
@@ -16,7 +17,7 @@ describe('login reducer', () => {
     })
     it('should handle LOGIN_SUCCESS', () => {
         expect(
-            login({}, {
+            reducer({}, {
                 type: types.LOGIN_SUCCESS,
                 id: "1234",
                 username: "test"
@@ -31,7 +32,7 @@ describe('login reducer', () => {
     })
     it('should handle LOGIN_REQUIRED', () => {
         expect(
-            login({}, {
+            reducer({}, {
                 type: types.LOGIN_REQUIRED,
                 text: "test"
             })
@@ -43,7 +44,7 @@ describe('login reducer', () => {
     })
     it('should handle LOGIN_ERROR', () => {
         expect(
-            login({}, {
+            reducer({}, {
                 type: types.LOGIN_ERROR,
                 text: "test"
             })

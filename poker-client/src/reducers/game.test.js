@@ -1,9 +1,10 @@
-import { game } from './game'
+import game from './game'
 import * as types from '../actions/game'
+const reducer = game;
 
 describe('game reducer', () => {
     it('should return the initial state', () => {
-        expect(game(undefined, {})).toEqual(
+        expect(reducer(undefined, {})).toEqual(
             {
                 id: null,
                 didStart: false,
@@ -17,7 +18,7 @@ describe('game reducer', () => {
     })
     it('should handle JOIN_GAME_SUCCESS', () => {
         expect(
-            game({}, {
+            reducer({}, {
                 type: types.JOIN_GAME_SUCCESS,
                 id: "1234",
             })
@@ -29,7 +30,7 @@ describe('game reducer', () => {
     })
     it('should handle CREATE_GAME_SUCCESS', () => {
         expect(
-            game({}, {
+            reducer({}, {
                 type: types.CREATE_GAME_SUCCESS,
                 id: "1234",
             })
@@ -41,7 +42,7 @@ describe('game reducer', () => {
     })
     it('should handle JOIN_GAME_ERROR', () => {
         expect(
-            game({}, {
+            reducer({}, {
                 type: types.JOIN_GAME_ERROR,
                 text: "test"
             })
@@ -53,7 +54,7 @@ describe('game reducer', () => {
     })
     it('should handle CREATE_GAME_ERROR', () => {
         expect(
-            game({}, {
+            reducer({}, {
                 type: types.CREATE_GAME_ERROR,
                 text: "test"
             })
@@ -65,7 +66,7 @@ describe('game reducer', () => {
     })
     it('should handle JOIN_GAME', () => {
         expect(
-            game({ players: [] }, {
+            reducer({ players: [] }, {
                 type: types.JOIN_GAME,
                 id: "1234",
                 username: "test"
@@ -81,7 +82,7 @@ describe('game reducer', () => {
     })
     it('should handle JOIN_GAME twice', () => {
         expect(
-            game(
+            reducer(
                 {
                     players: [{
                         id: "1234",
@@ -109,7 +110,7 @@ describe('game reducer', () => {
     })
     it('should handle LEAVE_GAME', () => {
         expect(
-            game({
+            reducer({
                 players: [{
                     id: "1234",
                     username: "test"
@@ -131,7 +132,7 @@ describe('game reducer', () => {
     })
     it('should handle LEAVE_GAME_SUCCESS', () => {
         expect(
-            game({}, {
+            reducer({}, {
                 type: types.LEAVE_GAME_SUCCESS
             })
         ).toEqual({
@@ -142,7 +143,7 @@ describe('game reducer', () => {
     })
     it('should handle LEAVE_GAME_ERROR', () => {
         expect(
-            game({}, {
+            reducer({}, {
                 type: types.LEAVE_GAME_ERROR,
                 text: "test"
             })

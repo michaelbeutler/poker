@@ -1,7 +1,7 @@
 import {
     CREATE_GAME_SUCCESS, CREATE_GAME_ERROR, JOIN_GAME_SUCCESS, JOIN_GAME_ERROR, LEAVE_GAME_SUCCESS, LEAVE_GAME_ERROR, JOIN_GAME, LEAVE_GAME
 } from '../actions/game'
-export function game(
+const game = (
     state = {
         id: null,
         didStart: false,
@@ -12,7 +12,7 @@ export function game(
         errorText: null
     },
     action
-) {
+) => {
     switch (action.type) {
         case JOIN_GAME_SUCCESS:
         case CREATE_GAME_SUCCESS:
@@ -54,3 +54,4 @@ export function game(
             return state;
     }
 }
+export default game;
