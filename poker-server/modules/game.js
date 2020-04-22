@@ -28,7 +28,7 @@ class Game {
         return this.players.filter(p => { return p.socket.id === player.socket.id }).length === 1;
     }
     getCurrentRound() {
-        return this.rounds[this.rounds.length -1];
+        return this.rounds[this.rounds.length - 1];
     }
     addPlayer(player) {
         if (DEBUG) { console.log(`add player ${player.username} to game`.debug) };
@@ -36,6 +36,9 @@ class Game {
             // player is already in the game
             return false;
         }
+        this.players.forEach(p => {
+            player.privateEmit(JOIN_GAME, { id: p.id, username: p.username });
+        });
         this.players.push(player);
         this.broadcast(JOIN_GAME, { id: player.id, username: player.username });
         player.socket.join(this.id);

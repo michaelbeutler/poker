@@ -7,7 +7,7 @@ import {
 } from '../../actions/login'
 
 import './game.scss';
-import { CREATE_GAME, CREATE_GAME_ERROR, CREATE_GAME_SUCCESS, createGameSuccess, createGameError, JOIN_GAME, JOIN_GAME_ERROR, JOIN_GAME_SUCCESS, joinGame, joinGameSuccess, joinGameError, LEAVE_GAME, LEAVE_GAME_SUCCESS, LEAVE_GAME_ERROR, leaveGameError, leaveGameSuccess } from '../../actions/game';
+import { CREATE_GAME, CREATE_GAME_ERROR, CREATE_GAME_SUCCESS, createGameSuccess, createGameError, JOIN_GAME, JOIN_GAME_ERROR, JOIN_GAME_SUCCESS, joinGame, joinGameSuccess, joinGameError, leaveGame, LEAVE_GAME, LEAVE_GAME_SUCCESS, LEAVE_GAME_ERROR, leaveGameError, leaveGameSuccess } from '../../actions/game';
 
 /**
  * Game Component
@@ -16,7 +16,7 @@ import { CREATE_GAME, CREATE_GAME_ERROR, CREATE_GAME_SUCCESS, createGameSuccess,
 class Game extends Component {
     constructor(props) {
         super(props);
-        this.state = { socket: io.connect("http://tmr3:3001") };
+        this.state = { socket: io.connect("http://localhost:3001") };
         const { socket } = this.state;
 
         // login was successfully
@@ -44,7 +44,7 @@ class Game extends Component {
         });
 
 
-        // join game was successfully
+        // join game
         socket.on(JOIN_GAME, data => {
             this.props.dispatch(joinGame(data));
         });
@@ -57,6 +57,10 @@ class Game extends Component {
         });
 
 
+        // leave game
+        socket.on(LEAVE_GAME, data => {
+            this.props.dispatch(leaveGame(data));
+        });
         // leave game was successfully
         socket.on(LEAVE_GAME_SUCCESS, data => {
             this.props.dispatch(leaveGameSuccess(data));

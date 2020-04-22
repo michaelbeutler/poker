@@ -1,5 +1,5 @@
 import {
-    CREATE_GAME_SUCCESS, CREATE_GAME_ERROR, JOIN_GAME_SUCCESS, JOIN_GAME_ERROR, LEAVE_GAME_SUCCESS, LEAVE_GAME_ERROR, JOIN_GAME
+    CREATE_GAME_SUCCESS, CREATE_GAME_ERROR, JOIN_GAME_SUCCESS, JOIN_GAME_ERROR, LEAVE_GAME_SUCCESS, LEAVE_GAME_ERROR, JOIN_GAME, LEAVE_GAME
 } from '../actions/game'
 export function game(
     state = {
@@ -31,6 +31,11 @@ export function game(
         case JOIN_GAME:
             return Object.assign({}, state, {
                 players: [...state.players, { id: action.id, username: action.username }]
+            });
+        case LEAVE_GAME:
+            const { players } = state;
+            return Object.assign({}, state, {
+                players: players.filter(p => { return p.id !== action.id })
             });
         case LEAVE_GAME_SUCCESS:
             return Object.assign({}, state, {

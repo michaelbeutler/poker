@@ -72,6 +72,14 @@ export const joinGameError = data => {
     }
 }
 
+export const leaveGame = data => {
+    return {
+        type: LEAVE_GAME,
+        id: data.id,
+        username: data.username
+    }
+}
+
 export const leaveGameSuccess = data => {
     return {
         type: LEAVE_GAME_SUCCESS
