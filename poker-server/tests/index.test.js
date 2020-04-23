@@ -235,17 +235,4 @@ describe('ready status', () => {
       });
     });
   });
-  test('should be to start after 1 second when all players are ready', (done) => {
-    socket.emit('LOGIN', { username: "test" });
-    socket.emit('CREATE_GAME');
-    socket.once('CREATE_GAME_SUCCESS', (data) => {
-      socket.emit('PLAYER_READY', { id: data.id });
-      socket.once('PLAYER_READY_SUCCESS', () => {
-        socket.once('GAME_START', (data) => {
-          expect(data.id).toBeDefined();
-          done();
-        });
-      });
-    });
-  });
 });
