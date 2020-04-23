@@ -82,7 +82,8 @@ class Game {
         return true;
     }
     start() {
-        if (this.players.length < 2) { return false; }
+        // check if enaugh players are in the game and game did not start yet
+        if (this.players.length < 2 && !this.isStarted) { return false; }
         let allPlayersReady = this.players.filter(p => { return !p.isReady }).length === 0;
         if (!allPlayersReady) { return false; }
 
