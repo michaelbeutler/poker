@@ -7,7 +7,7 @@ import {
 } from '../../actions/login'
 
 import './game.scss';
-import { CREATE_GAME, CREATE_GAME_ERROR, CREATE_GAME_SUCCESS, createGameSuccess, createGameError, JOIN_GAME, JOIN_GAME_ERROR, JOIN_GAME_SUCCESS, joinGame, joinGameSuccess, joinGameError, leaveGame, LEAVE_GAME, LEAVE_GAME_SUCCESS, LEAVE_GAME_ERROR, leaveGameError, leaveGameSuccess } from '../../actions/game';
+import { CREATE_GAME, CREATE_GAME_ERROR, CREATE_GAME_SUCCESS, createGameSuccess, createGameError, JOIN_GAME, JOIN_GAME_ERROR, JOIN_GAME_SUCCESS, joinGame, joinGameSuccess, joinGameError, leaveGame, LEAVE_GAME, LEAVE_GAME_SUCCESS, LEAVE_GAME_ERROR, leaveGameError, leaveGameSuccess, PLAYER_READY, playerReady, PLAYER_NOT_READY, PLAYER_READY_SUCCESS, PLAYER_READY_ERROR, playerReadyError, playerReadySuccess } from '../../actions/game';
 
 /**
  * Game Component
@@ -77,6 +77,20 @@ class Game extends Component {
             this.props.dispatch(leaveGameError(data));
         });
 
+
+        // player ready
+        socket.on(PLAYER_READY, data => {
+            this.props.dispatch(playerReady(data));
+        });
+        // player ready was successfully
+        socket.on(PLAYER_READY_SUCCESS, data => {
+            this.props.dispatch(playerReadySuccess(data));
+        });
+        // player ready was not successfully
+        socket.on(PLAYER_READY_ERROR, data => {
+            this.props.dispatch(playerReadyError(data));
+        });
+
         this.emit = this.emit.bind(this);
     }
     emit(event, data = {}) {
@@ -89,10 +103,13 @@ class Game extends Component {
             if (this.props.game.isSuccess) {
                 return <>
                     {this.props.game.id}<br />
-                    {this.props.game.players.map(player => (
-                        player.username
+                    <li><b>You</b> - {this.props.game.isReady ? "ready" : "not ready"}</li>
+                    {this.props.game.players.map((player, index) => (
+                        <li key={index}><b>{player.username}</b> - {player.isReady ? "ready" : "not ready"}</li>
                     ))}<br />
                     <button onClick={() => { this.emit(LEAVE_GAME, { id: this.props.game.id }) }}>Leave</button>
+                    {this.props.game.isReady ? <button onClick={() => { this.emit(PLAYER_NOT_READY, { id: this.props.game.id }) }}>Not Ready</button>
+                        : <button onClick={() => { this.emit(PLAYER_READY, { id: this.props.game.id }) }}>Ready</button>}
                 </>;
             }
             return <>

@@ -61,7 +61,8 @@ export const joinGame = data => {
     return {
         type: JOIN_GAME,
         id: data.id, 
-        username: data.username
+        username: data.username,
+        isReady: data.isReady
     }
 }
 
@@ -89,6 +90,28 @@ export const leaveGameSuccess = data => {
 export const leaveGameError = data => {
     return {
         type: LEAVE_GAME_ERROR,
+        text: data.text
+    }
+}
+
+export const playerReady = data => {
+    return {
+        type: PLAYER_READY,
+        id: data.id,
+        username: data.username
+    }
+}
+
+export const playerReadySuccess = data => {
+    return {
+        type: PLAYER_READY_SUCCESS,
+        id: data.id
+    }
+}
+
+export const playerReadyError = data => {
+    return {
+        type: PLAYER_READY_ERROR,
         text: data.text
     }
 }

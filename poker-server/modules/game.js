@@ -39,10 +39,10 @@ class Game {
 
         // notify each player in current game that a player joined
         this.players.forEach(p => {
-            player.privateEmit(JOIN_GAME, { id: p.id, username: p.username });
+            player.privateEmit(JOIN_GAME, { id: p.socket.id, username: p.username, isReady: p.isReady });
         });
         this.players.push(player);
-        this.broadcast(JOIN_GAME, { id: player.id, username: player.username });
+        this.broadcast(JOIN_GAME, { id: player.socket.id, username: player.username, isReady: player.isReady });
         player.socket.join(this.id);
         return true;
     }
@@ -54,7 +54,7 @@ class Game {
         }
         this.players = this.players.filter(p => { return p.socket.id !== player.socket.id });
         player.socket.leave(this.id);
-        this.broadcast(LEAVE_GAME, { id: player.id, username: player.username });
+        this.broadcast(LEAVE_GAME, { id: player.socket.id, username: player.username });
         return true;
     }
     addRound() {
@@ -68,7 +68,7 @@ class Game {
             return false;
         }
         player.isReady = true;
-        this.broadcast(PLAYER_READY, { id: player.id, username: player.username });
+        this.broadcast(PLAYER_READY, { id: player.socket.id, username: player.username });
         return true;
     }
     notReady(player) {
@@ -78,10 +78,11 @@ class Game {
             return false;
         }
         player.isReady = false;
-        this.broadcast(PLAYER_NOT_READY, { id: player.id, username: player.username });
+        this.broadcast(PLAYER_NOT_READY, { id: player.socket.id, username: player.username });
         return true;
     }
     start() {
+        if (this.players.length < 2) { return false; }
         let allPlayersReady = this.players.filter(p => { return !p.isReady }).length === 0;
         if (!allPlayersReady) { return false; }
 
