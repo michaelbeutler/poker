@@ -87,4 +87,36 @@ describe('actions for game', () => {
         }
         expect(actions.playerReady(data)).toEqual(expectedAction)
     })
+    it('should create an action to set not ready game success', () => {
+        const data = { id: "1234" }
+        const expectedAction = {
+            type: actions.PLAYER_NOT_READY_SUCCESS,
+            ...data
+        }
+        expect(actions.playerNotReadySuccess(data)).toEqual(expectedAction)
+    })
+    it('should create an action to set ready game error', () => {
+        const data = { text: "test" }
+        const expectedAction = {
+            type: actions.PLAYER_NOT_READY_ERROR,
+            ...data
+        }
+        expect(actions.playerNotReadyError(data)).toEqual(expectedAction)
+    })
+    it('should create an action to set ready game', () => {
+        const data = { id: "1234", username: "test" }
+        const expectedAction = {
+            type: actions.PLAYER_NOT_READY,
+            ...data
+        }
+        expect(actions.playerNotReady(data)).toEqual(expectedAction)
+    })
+    it('should create an action to set game start', () => {
+        const data = { id: "1234" }
+        const expectedAction = {
+            type: actions.GAME_START,
+            ...data
+        }
+        expect(actions.gameStart(data)).toEqual(expectedAction)
+    })
 });

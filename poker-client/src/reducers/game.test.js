@@ -212,4 +212,64 @@ describe('game reducer', () => {
             isReady: false
         })
     })
+    it('should handle PLAYER_NOT_READY', () => {
+        expect(
+            reducer({
+                players: [{
+                    id: "1234",
+                    username: "test",
+                    isReady: true
+                },
+                {
+                    id: "12345",
+                    username: "test2",
+                    isReady: false
+                }]
+            }, {
+                type: types.PLAYER_NOT_READY,
+                id: "1234",
+                username: "test",
+            })
+        ).toEqual({
+            players: [{
+                id: "1234",
+                username: "test",
+                isReady: false
+            },
+            {
+                id: "12345",
+                username: "test2",
+                isReady: false
+            }]
+        })
+    })
+    it('should handle PLAYER_NOT_READY_SUCCESS', () => {
+        expect(
+            reducer({}, {
+                type: types.PLAYER_NOT_READY_SUCCESS
+            })
+        ).toEqual({
+            isReady: false
+        })
+    })
+    it('should handle PLAYER_NOT_READY_ERROR', () => {
+        expect(
+            reducer({}, {
+                type: types.PLAYER_NOT_READY_ERROR,
+                text: "test"
+            })
+        ).toEqual({
+            isReady: false
+        })
+    })
+    it('should handle GAME_START', () => {
+        expect(
+            reducer({}, {
+                type: types.GAME_START,
+                id: "1234"
+            })
+        ).toEqual({
+            didStart: true
+        })
+    })
 })
