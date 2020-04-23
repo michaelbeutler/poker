@@ -23,8 +23,8 @@ httpServer.listen(PORT, () => {
 });
 app.use(express.static(path.join(__dirname, 'public')));
 
-const games = [];
-const players = [];
+let games = [];
+let players = [];
 
 function getPlayerById(id) {
     return players.filter(p => { return p.socket.id === id })[0];
@@ -34,6 +34,10 @@ function getGameById(id) {
     return games.filter(g => { return g.id === id })[0];
 }
 
+function clearPlayers() {
+    players = [];
+}
+
 io.on('connection', socket => {
 
     // login
@@ -41,6 +45,12 @@ io.on('connection', socket => {
         if (data && data.username && data.username.length > 0 && !data.username.isEmpty()) {
             const username = data.username.trim().trunc(25);
             if (DEBUG) { console.log(`login ${username}`.debug) }
+
+            if (players.filter(p => { return p.username.toLowerCase() === username.toLowerCase() }).length !== 0) {
+                io.to(socket.id).emit(LOGIN_ERROR, { text: "username already taken" });
+                if (DEBUG) { console.log(`${username} already taken`.debug); }
+                return false;
+            }
 
             players.push(new Player(io, socket, username));
             socket.login = true;
@@ -141,4 +151,4 @@ io.on('connection', socket => {
     });
 });
 
-module.exports = { io, httpServer };
+module.exports = { io, httpServer, clearPlayers };
