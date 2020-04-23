@@ -1,5 +1,5 @@
 import {
-    CREATE_GAME_SUCCESS, CREATE_GAME_ERROR, JOIN_GAME_SUCCESS, JOIN_GAME_ERROR, LEAVE_GAME_SUCCESS, LEAVE_GAME_ERROR, JOIN_GAME, LEAVE_GAME, PLAYER_READY, PLAYER_READY_SUCCESS, PLAYER_READY_ERROR, GAME_START, PLAYER_NOT_READY, PLAYER_NOT_READY_SUCCESS, PLAYER_NOT_READY_ERROR
+    CREATE_GAME_SUCCESS, CREATE_GAME_ERROR, JOIN_GAME_SUCCESS, JOIN_GAME_ERROR, LEAVE_GAME_SUCCESS, LEAVE_GAME_ERROR, JOIN_GAME, LEAVE_GAME, PLAYER_READY, PLAYER_READY_SUCCESS, PLAYER_READY_ERROR, GAME_START, PLAYER_NOT_READY, PLAYER_NOT_READY_SUCCESS, PLAYER_NOT_READY_ERROR, GAME_NEW_ROUND, UPDATE_PLAYERS
 } from '../actions/game'
 const game = (
     state = {
@@ -92,6 +92,43 @@ const game = (
         case GAME_START:
             return Object.assign({}, state, {
                 didStart: true
+            });
+        case GAME_NEW_ROUND:
+            return Object.assign({}, state, {
+                rounds: [...state.rounds, {
+                    pot: 0,
+                    didHandOutCards: false,
+                    didSmallBlind: false,
+                    didBigBlind: false,
+                    smallBlindAmount: 5,
+                    bigBlindAmount: 10,
+                    players: state.players.map(player => {
+                        return {
+                            ...player,
+                            bet: 0,
+                            cards: [],
+                            isDealer: false,
+                            isSmallBlind: false,
+                            isBigBlind: false,
+                            isCurrentPlayer: false
+                        }
+                    }),
+                    dealerCards: []
+                }]
+            });
+        case UPDATE_PLAYERS:
+            return Object.assign({}, state, {
+                rounds: state.rounds.map((round, index) => {
+                    if (index === state.rounds.length - 1) {
+                        return {
+                            ...round,
+                            players: action.players.map(player => {
+                                return { ...player, isReady: true }
+                            })
+                        }
+                    }
+                    return round;
+                })
             });
         default:
             return state;

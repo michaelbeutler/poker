@@ -7,7 +7,7 @@ import {
 } from '../../actions/login'
 
 import './game.scss';
-import { CREATE_GAME, CREATE_GAME_ERROR, CREATE_GAME_SUCCESS, createGameSuccess, createGameError, JOIN_GAME, JOIN_GAME_ERROR, JOIN_GAME_SUCCESS, joinGame, joinGameSuccess, joinGameError, leaveGame, LEAVE_GAME, LEAVE_GAME_SUCCESS, LEAVE_GAME_ERROR, leaveGameError, leaveGameSuccess, PLAYER_READY, playerReady, PLAYER_NOT_READY, PLAYER_READY_SUCCESS, PLAYER_READY_ERROR, playerReadyError, playerReadySuccess, playerNotReady, PLAYER_NOT_READY_SUCCESS, playerNotReadySuccess, playerNotReadyError, PLAYER_NOT_READY_ERROR, GAME_START, gameStart } from '../../actions/game';
+import { CREATE_GAME, CREATE_GAME_ERROR, CREATE_GAME_SUCCESS, createGameSuccess, createGameError, JOIN_GAME, JOIN_GAME_ERROR, JOIN_GAME_SUCCESS, joinGame, joinGameSuccess, joinGameError, leaveGame, LEAVE_GAME, LEAVE_GAME_SUCCESS, LEAVE_GAME_ERROR, leaveGameError, leaveGameSuccess, PLAYER_READY, playerReady, PLAYER_NOT_READY, PLAYER_READY_SUCCESS, PLAYER_READY_ERROR, playerReadyError, playerReadySuccess, playerNotReady, PLAYER_NOT_READY_SUCCESS, playerNotReadySuccess, playerNotReadyError, PLAYER_NOT_READY_ERROR, GAME_START, gameStart, GAME_NEW_ROUND, gameNewRound, UPDATE_PLAYERS, updatePlayers } from '../../actions/game';
 
 /**
  * Game Component
@@ -26,88 +26,102 @@ class Game extends Component {
             }
         });
 
+        // deconstruct props
+        const { dispatch } = this.props;
+
         // login was successfully
         socket.on(LOGIN_SUCCESS, data => {
             Object.assign(data, { id: socket.id });
-            this.props.dispatch(loginSuccess(data));
+            dispatch(loginSuccess(data));
         });
         // login was not successfully
         socket.on(LOGIN_ERROR, data => {
-            this.props.dispatch(loginError(data));
+            dispatch(loginError(data));
         });
         // login required
         socket.on(LOGIN_REQUIRED, data => {
-            this.props.dispatch(loginRequired(data));
+            dispatch(loginRequired(data));
         });
 
 
         // create game was successfully
         socket.on(CREATE_GAME_SUCCESS, data => {
-            this.props.dispatch(createGameSuccess(data));
+            dispatch(createGameSuccess(data));
         });
         // create game was not successfully
         socket.on(CREATE_GAME_ERROR, data => {
-            this.props.dispatch(createGameError(data));
+            dispatch(createGameError(data));
         });
 
 
         // join game
         socket.on(JOIN_GAME, data => {
-            this.props.dispatch(joinGame(data));
+            dispatch(joinGame(data));
         });
         socket.on(JOIN_GAME_SUCCESS, data => {
-            this.props.dispatch(joinGameSuccess(data));
+            dispatch(joinGameSuccess(data));
         });
         // join game was not successfully
         socket.on(JOIN_GAME_ERROR, data => {
-            this.props.dispatch(joinGameError(data));
+            dispatch(joinGameError(data));
         });
 
 
         // leave game
         socket.on(LEAVE_GAME, data => {
-            this.props.dispatch(leaveGame(data));
+            dispatch(leaveGame(data));
         });
         // leave game was successfully
         socket.on(LEAVE_GAME_SUCCESS, data => {
-            this.props.dispatch(leaveGameSuccess(data));
+            dispatch(leaveGameSuccess(data));
         });
         // leave game was not successfully
         socket.on(LEAVE_GAME_ERROR, data => {
-            this.props.dispatch(leaveGameError(data));
+            dispatch(leaveGameError(data));
         });
 
 
         // player ready
         socket.on(PLAYER_READY, data => {
-            this.props.dispatch(playerReady(data));
+            dispatch(playerReady(data));
         });
         // player ready was successfully
         socket.on(PLAYER_READY_SUCCESS, data => {
-            this.props.dispatch(playerReadySuccess(data));
+            dispatch(playerReadySuccess(data));
         });
         // player ready was not successfully
         socket.on(PLAYER_READY_ERROR, data => {
-            this.props.dispatch(playerReadyError(data));
+            dispatch(playerReadyError(data));
         });
 
 
         // player not ready
         socket.on(PLAYER_NOT_READY, data => {
-            this.props.dispatch(playerNotReady(data));
+            dispatch(playerNotReady(data));
         });
         // player not ready was successfully
         socket.on(PLAYER_NOT_READY_SUCCESS, data => {
-            this.props.dispatch(playerNotReadySuccess(data));
+            dispatch(playerNotReadySuccess(data));
         });
         // player not ready was not successfully
         socket.on(PLAYER_NOT_READY_ERROR, data => {
-            this.props.dispatch(playerNotReadyError(data));
+            dispatch(playerNotReadyError(data));
         });
+
 
         // game start
         socket.on(GAME_START, data => {
-            this.props.dispatch(gameStart(data));
+            dispatch(gameStart(data));
+        });
+        // game new round
+        socket.on(GAME_NEW_ROUND, data => {
+            dispatch(gameNewRound(data));
+        });
+
+
+        // update players
+        socket.on(UPDATE_PLAYERS, data => {
+            dispatch(updatePlayers(data));
         });
 
         this.emit = this.emit.bind(this);
@@ -118,29 +132,41 @@ class Game extends Component {
         socket.emit(event, data);
     }
     render() {
-        if (this.props.login.isLogin) {
-            if (this.props.game.isSuccess) {
+        // deconstruct props
+        const { login, game } = this.props;
+
+        if (login.isLogin) {
+            if (game.isSuccess) {
+                if (game.didStart && game.rounds.length > 0) {
+                    const currentRound = game.rounds[game.rounds.length - 1];
+                    return <>
+                        {game.id}<br />
+                        {currentRound.players.map((player, index) => (
+                            <li key={index}><b>{player.username}</b> - {player.bet}$ - {player.isDealer ? "D " : ""}{player.isSmallBlind ? "S " : ""}{player.isBigBlind ? "B " : ""}</li>
+                        ))}<br />
+                    </>
+                }
                 return <>
-                    {this.props.game.id}{this.props.game.didStart ? " (game started)" : ""}<br />
-                    <li><b>You</b> - {this.props.game.isReady ? "ready" : "not ready"}</li>
-                    {this.props.game.players.map((player, index) => (
+                    {game.id}<br />
+                    <li><b>You</b> - {game.isReady ? "ready" : "not ready"}</li>
+                    {game.players.map((player, index) => (
                         <li key={index}><b>{player.username}</b> - {player.isReady ? "ready" : "not ready"}</li>
                     ))}<br />
-                    <button onClick={() => { this.emit(LEAVE_GAME, { id: this.props.game.id }) }}>Leave</button>
-                    {this.props.game.isReady ? <button onClick={() => { this.emit(PLAYER_NOT_READY, { id: this.props.game.id }) }}>Not Ready</button>
-                        : <button onClick={() => { this.emit(PLAYER_READY, { id: this.props.game.id }) }}>Ready</button>}
+                    <button onClick={() => { this.emit(LEAVE_GAME, { id: game.id }) }}>Leave</button>
+                    {game.isReady ? <button onClick={() => { this.emit(PLAYER_NOT_READY, { id: game.id }) }}>Not Ready</button>
+                        : <button onClick={() => { this.emit(PLAYER_READY, { id: game.id }) }}>Ready</button>}
                 </>;
             }
             return <>
                 logged in as {this.props.username}<br />
                 <button onClick={() => { this.emit(CREATE_GAME) }}>Create</button>
                 <button onClick={() => { this.emit(JOIN_GAME, { id: prompt() }) }}>Join</button><br />
-                {this.props.game.isError ? this.props.game.errorText : ""}
+                {game.isError ? game.errorText : ""}
             </>;
-        } else if (this.props.login.isError) {
+        } else if (login.isError) {
             return <>
                 <button onClick={() => { this.emit(LOGIN, { username: prompt() }) }}>Login</button>
-                ERROR: {this.props.login.errorText}
+                ERROR: {login.errorText}
             </>;
         } else {
             return <><button onClick={() => { this.emit(LOGIN, { username: prompt() }) }}>Login</button></>;

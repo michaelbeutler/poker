@@ -144,3 +144,24 @@ export const gameStart = data => {
         id: data.id
     }
 }
+
+export const gameNewRound = data => {
+    return {
+        type: GAME_NEW_ROUND,
+        id: data.id
+    }
+}
+
+export const updatePlayersError = data => {
+    return {
+        type: UPDATE_PLAYERS_ERROR,
+        text: data.text
+    }
+}
+
+export const updatePlayers = data => {
+    return {
+        type: UPDATE_PLAYERS,
+        players: data.players
+    }
+}

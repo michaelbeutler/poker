@@ -95,7 +95,9 @@ class Game {
         this.broadcast(GAME_START, { id: this.id });
         this.isStarted = true;
         if (this.addRound()) {
+            if (DEBUG) { console.log("add round".debug); }
             this.broadcast(GAME_NEW_ROUND, { id: this.id });
+            this.getCurrentRound().start();
         }
     }
 }
