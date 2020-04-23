@@ -154,7 +154,7 @@ describe('leaving game', () => {
       socket.once('LEAVE_GAME_SUCCESS', (data) => {
         socket.emit('LEAVE_GAME', { id: data.id });
         socket.once('LEAVE_GAME_ERROR', (data) => {
-          expect(data.text).toBe("player is not in this rooms");
+          expect(data.text).toBe("player is not in this room");
           done();
         });
       });

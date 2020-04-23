@@ -83,7 +83,7 @@ io.on('connection', socket => {
             if (game.addPlayer(getPlayerById(socket.id))) {
                 io.to(socket.id).emit(JOIN_GAME_SUCCESS, { id: data.id });
                 return true;
-            } else { io.to(socket.id).emit(JOIN_GAME_ERROR, { text: "player is already in this room" }); }
+            }
         } else { io.to(socket.id).emit(JOIN_GAME_ERROR, { text: "game id not set" }); }
         return false;
     });
@@ -100,7 +100,7 @@ io.on('connection', socket => {
             if (game.removePlayer(getPlayerById(socket.id))) {
                 io.to(socket.id).emit(LEAVE_GAME_SUCCESS, { id: data.id });
                 return true;
-            } else { io.to(socket.id).emit(LEAVE_GAME_ERROR, { text: "player is not in this rooms" }); }
+            }
         } else { io.to(socket.id).emit(LEAVE_GAME_ERROR, { text: "game id not set" }); }
         return false;
     });

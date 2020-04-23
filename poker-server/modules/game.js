@@ -2,7 +2,7 @@ const uuidv4 = require('uuid').v4;
 
 const { DEBUG } = require('../config');
 const {
-    JOIN_GAME, LEAVE_GAME,
+    JOIN_GAME, JOIN_GAME_ERROR, LEAVE_GAME, LEAVE_GAME_ERROR,
     PLAYER_READY, PLAYER_READY_ERROR,
     PLAYER_NOT_READY, PLAYER_NOT_READY_ERROR,
     GAME_START, GAME_NEW_ROUND
@@ -33,9 +33,10 @@ class Game {
     addPlayer(player) {
         if (DEBUG) { console.log(`add player ${player.username} to game`.debug) };
         if (this.playerIsInGame(player)) {
-            // player is already in the game
+            player.privateEmit(JOIN_GAME_ERROR, { text: "player is already in this room" });
             return false;
         }
+        if (this.isStarted) { player.privateEmit(JOIN_GAME_ERROR, { text: "game already started" }); return false; }
 
         // notify each player in current game that a player joined
         this.players.forEach(p => {
@@ -49,9 +50,11 @@ class Game {
     removePlayer(player) {
         if (DEBUG) { console.log(`remove player ${player.username} from game`.debug) };
         if (!this.playerIsInGame(player)) {
-            // player not in this game
+            player.privateEmit(LEAVE_GAME_ERROR, { text: "player is not in this room" });
             return false;
         }
+        if (this.isStarted) { player.privateEmit(LEAVE_GAME_ERROR, { text: "game already started" }); return false; }
+
         this.players = this.players.filter(p => { return p.socket.id !== player.socket.id });
         player.socket.leave(this.id);
         this.broadcast(LEAVE_GAME, { id: player.socket.id, username: player.username });
@@ -90,6 +93,7 @@ class Game {
         // can start
         console.log(`game ${this.id} started`);
         this.broadcast(GAME_START, { id: this.id });
+        this.isStarted = true;
         if (this.addRound()) {
             this.broadcast(GAME_NEW_ROUND, { id: this.id });
         }
