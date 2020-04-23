@@ -119,4 +119,28 @@ describe('actions for game', () => {
         }
         expect(actions.gameStart(data)).toEqual(expectedAction)
     })
+    it('should create an action to set game new round', () => {
+        const data = { id: "1234" }
+        const expectedAction = {
+            type: actions.GAME_NEW_ROUND,
+            ...data
+        }
+        expect(actions.gameNewRound(data)).toEqual(expectedAction)
+    })
+    it('should create an action to set update players errr', () => {
+        const data = { text: "test" }
+        const expectedAction = {
+            type: actions.UPDATE_PLAYERS_ERROR,
+            ...data
+        }
+        expect(actions.updatePlayersError(data)).toEqual(expectedAction)
+    })
+    it('should create an action to set update players', () => {
+        const data = { players: [{ id: "1234" }] }
+        const expectedAction = {
+            type: actions.UPDATE_PLAYERS,
+            ...data
+        }
+        expect(actions.updatePlayers(data)).toEqual(expectedAction)
+    })
 });

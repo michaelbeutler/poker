@@ -272,4 +272,137 @@ describe('game reducer', () => {
             didStart: true
         })
     })
+    it('should handle GAME_NEW_ROUND', () => {
+        expect(
+            reducer({
+                rounds: [],
+                players: [
+                    {
+                        id: "1234",
+                        username: "test",
+                        isReady: true
+                    },
+                    {
+                        id: "12345",
+                        username: "test2",
+                        isReady: true
+                    }
+                ]
+            }, {
+                type: types.GAME_NEW_ROUND,
+                id: "123"
+            })
+        ).toEqual({
+            rounds: [{
+                pot: 0,
+                didHandOutCards: false,
+                didSmallBlind: false,
+                didBigBlind: false,
+                smallBlindAmount: 5,
+                bigBlindAmount: 10,
+                players: [
+                    {
+                        id: "1234",
+                        username: "test",
+                        isReady: true,
+                        bet: 0,
+                        cards: [],
+                        isDealer: false,
+                        isSmallBlind: false,
+                        isBigBlind: false,
+                        isCurrentPlayer: false
+                    },
+                    {
+                        id: "12345",
+                        username: "test2",
+                        isReady: true,
+                        bet: 0,
+                        cards: [],
+                        isDealer: false,
+                        isSmallBlind: false,
+                        isBigBlind: false,
+                        isCurrentPlayer: false
+                    }
+                ],
+                dealerCards: []
+            }],
+            players: [
+                {
+                    id: "1234",
+                    username: "test",
+                    isReady: true
+                },
+                {
+                    id: "12345",
+                    username: "test2",
+                    isReady: true
+                }
+            ]
+        })
+    })
+    it('should handle UPDATE_PLAYERS', () => {
+        expect(
+            reducer({
+                rounds: [{
+                    pot: 0,
+                    didHandOutCards: false,
+                    didSmallBlind: false,
+                    didBigBlind: false,
+                    smallBlindAmount: 5,
+                    bigBlindAmount: 10,
+                    players: [
+                        {
+                            id: "1234",
+                            username: "test",
+                            isReady: true,
+                            bet: 0,
+                            cards: [],
+                            isDealer: false,
+                            isSmallBlind: false,
+                            isBigBlind: false,
+                            isCurrentPlayer: false
+                        }
+                    ],
+                    dealerCards: []
+                }]
+            }, {
+                type: types.UPDATE_PLAYERS,
+                players: [
+                    {
+                        id: "1234",
+                        username: "test",
+                        bet: 0,
+                        cards: [null, null],
+                        isDealer: true,
+                        isSmallBlind: true,
+                        isBigBlind: false,
+                        isCurrentPlayer: true
+                    }
+                ]
+            })
+        ).toEqual({
+            rounds: [{
+                pot: 0,
+                didHandOutCards: false,
+                didSmallBlind: false,
+                didBigBlind: false,
+                smallBlindAmount: 5,
+                bigBlindAmount: 10,
+                players: [
+                    {
+                        id: "1234",
+                        username: "test",
+                        bet: 0,
+                        cards: [null, null],
+                        isDealer: true,
+                        isReady: true,
+                        isSmallBlind: true,
+                        isBigBlind: false,
+                        isCurrentPlayer: true
+                    }
+                ],
+                dealerCards: []
+            }]
+        })
+    })
 })
