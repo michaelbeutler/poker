@@ -1,5 +1,5 @@
 const io = require('socket.io-client');
-const { httpServer } = require('../index');
+const { httpServer, clearPlayers } = require('../index');
 
 beforeEach((done) => {
   socket = io.connect(`http://[localhost]:3001`, {
@@ -9,6 +9,7 @@ beforeEach((done) => {
     transports: ['websocket'],
   });
   socket.on('connect', () => {
+    clearPlayers();
     done();
   });
 });
@@ -38,6 +39,20 @@ describe('basic connection and login', () => {
     socket.emit('LOGIN');
     socket.once('LOGIN_ERROR', (data) => {
       expect(data.text).toBe("invalid username");
+      done();
+    });
+  });
+  test('should not be able to login if given username is not uniqe', (done) => {
+    socket2 = io.connect(`http://[localhost]:3001`, {
+      'reconnection delay': 0,
+      'reopen delay': 0,
+      'force new connection': true,
+      transports: ['websocket'],
+    });
+    socket.emit('LOGIN', { username: "test" });
+    socket2.emit('LOGIN', { username: "test" });
+    socket2.once('LOGIN_ERROR', (data) => {
+      expect(data.text).toBe("username already taken");
       done();
     });
   });
