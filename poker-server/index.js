@@ -39,7 +39,7 @@ io.on('connection', socket => {
     // login
     socket.on(LOGIN, async (data) => {
         if (data && data.username && data.username.length > 0 && !data.username.isEmpty()) {
-            const username = data.username.trim().trunc(10);
+            const username = data.username.trim().trunc(25);
             if (DEBUG) { console.log(`login ${username}`.debug) }
 
             players.push(new Player(io, socket, username));
