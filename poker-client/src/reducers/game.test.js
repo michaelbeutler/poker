@@ -25,7 +25,8 @@ describe('game reducer', () => {
         ).toEqual({
             isError: false,
             isSuccess: true,
-            id: "1234"
+            id: "1234",
+            isReady: false
         })
     })
     it('should handle CREATE_GAME_SUCCESS', () => {
@@ -37,7 +38,8 @@ describe('game reducer', () => {
         ).toEqual({
             isError: false,
             isSuccess: true,
-            id: "1234"
+            id: "1234",
+            isReady: false
         })
     })
     it('should handle JOIN_GAME_ERROR', () => {
@@ -69,13 +71,15 @@ describe('game reducer', () => {
             reducer({ players: [] }, {
                 type: types.JOIN_GAME,
                 id: "1234",
-                username: "test"
+                username: "test",
+                isReady: false
             })
         ).toEqual({
             players: [
                 {
                     id: "1234",
-                    username: "test"
+                    username: "test",
+                    isReady: false
                 }
             ]
         })
@@ -137,8 +141,12 @@ describe('game reducer', () => {
             })
         ).toEqual({
             id: null,
+            didStart: false,
+            players: [],
+            rounds: [],
             isError: false,
-            isSuccess: false
+            isSuccess: false,
+            errorText: null
         })
     })
     it('should handle LEAVE_GAME_ERROR', () => {
@@ -152,6 +160,56 @@ describe('game reducer', () => {
             isError: true,
             isSuccess: false,
             errorText: "test"
+        })
+    })
+    it('should handle PLAYER_READY', () => {
+        expect(
+            reducer({
+                players: [{
+                    id: "1234",
+                    username: "test",
+                    isReady: false
+                },
+                {
+                    id: "12345",
+                    username: "test2",
+                    isReady: false
+                }]
+            }, {
+                type: types.PLAYER_READY,
+                id: "1234",
+                username: "test",
+            })
+        ).toEqual({
+            players: [{
+                id: "1234",
+                username: "test",
+                isReady: true
+            },
+            {
+                id: "12345",
+                username: "test2",
+                isReady: false
+            }]
+        })
+    })
+    it('should handle PLAYER_READY_SUCCESS', () => {
+        expect(
+            reducer({}, {
+                type: types.PLAYER_READY_SUCCESS
+            })
+        ).toEqual({
+            isReady: true
+        })
+    })
+    it('should handle PLAYER_READY_ERROR', () => {
+        expect(
+            reducer({}, {
+                type: types.PLAYER_READY_ERROR,
+                text: "test"
+            })
+        ).toEqual({
+            isReady: false
         })
     })
 })
