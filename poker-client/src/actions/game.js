@@ -115,3 +115,32 @@ export const playerReadyError = data => {
         text: data.text
     }
 }
+
+export const playerNotReady = data => {
+    return {
+        type: PLAYER_NOT_READY,
+        id: data.id,
+        username: data.username
+    }
+}
+
+export const playerNotReadySuccess = data => {
+    return {
+        type: PLAYER_NOT_READY_SUCCESS,
+        id: data.id
+    }
+}
+
+export const playerNotReadyError = data => {
+    return {
+        type: PLAYER_NOT_READY_ERROR,
+        text: data.text
+    }
+}
+
+export const gameStart = data => {
+    return {
+        type: GAME_START,
+        id: data.id
+    }
+}

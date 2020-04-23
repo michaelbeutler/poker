@@ -7,7 +7,7 @@ import {
 } from '../../actions/login'
 
 import './game.scss';
-import { CREATE_GAME, CREATE_GAME_ERROR, CREATE_GAME_SUCCESS, createGameSuccess, createGameError, JOIN_GAME, JOIN_GAME_ERROR, JOIN_GAME_SUCCESS, joinGame, joinGameSuccess, joinGameError, leaveGame, LEAVE_GAME, LEAVE_GAME_SUCCESS, LEAVE_GAME_ERROR, leaveGameError, leaveGameSuccess, PLAYER_READY, playerReady, PLAYER_NOT_READY, PLAYER_READY_SUCCESS, PLAYER_READY_ERROR, playerReadyError, playerReadySuccess } from '../../actions/game';
+import { CREATE_GAME, CREATE_GAME_ERROR, CREATE_GAME_SUCCESS, createGameSuccess, createGameError, JOIN_GAME, JOIN_GAME_ERROR, JOIN_GAME_SUCCESS, joinGame, joinGameSuccess, joinGameError, leaveGame, LEAVE_GAME, LEAVE_GAME_SUCCESS, LEAVE_GAME_ERROR, leaveGameError, leaveGameSuccess, PLAYER_READY, playerReady, PLAYER_NOT_READY, PLAYER_READY_SUCCESS, PLAYER_READY_ERROR, playerReadyError, playerReadySuccess, playerNotReady, PLAYER_NOT_READY_SUCCESS, playerNotReadySuccess, playerNotReadyError, PLAYER_NOT_READY_ERROR, GAME_START, gameStart } from '../../actions/game';
 
 /**
  * Game Component
@@ -91,6 +91,25 @@ class Game extends Component {
             this.props.dispatch(playerReadyError(data));
         });
 
+
+        // player not ready
+        socket.on(PLAYER_NOT_READY, data => {
+            this.props.dispatch(playerNotReady(data));
+        });
+        // player not ready was successfully
+        socket.on(PLAYER_NOT_READY_SUCCESS, data => {
+            this.props.dispatch(playerNotReadySuccess(data));
+        });
+        // player not ready was not successfully
+        socket.on(PLAYER_NOT_READY_ERROR, data => {
+            this.props.dispatch(playerNotReadyError(data));
+        });
+
+        // game start
+        socket.on(GAME_START, data => {
+            this.props.dispatch(gameStart(data));
+        });
+
         this.emit = this.emit.bind(this);
     }
     emit(event, data = {}) {
@@ -102,7 +121,7 @@ class Game extends Component {
         if (this.props.login.isLogin) {
             if (this.props.game.isSuccess) {
                 return <>
-                    {this.props.game.id}<br />
+                    {this.props.game.id}{this.props.game.didStart ? " (game started)" : ""}<br />
                     <li><b>You</b> - {this.props.game.isReady ? "ready" : "not ready"}</li>
                     {this.props.game.players.map((player, index) => (
                         <li key={index}><b>{player.username}</b> - {player.isReady ? "ready" : "not ready"}</li>
