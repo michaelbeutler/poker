@@ -1,12 +1,12 @@
 import React from 'react';
 
-import Game from './components/Game';
+import Websocket from './containers/Websocket';
 import './app.scss';
 
 function App() {
   return (
     <div className="app">
-      <Game />
+      <Websocket />
     </div>
   );
 }
