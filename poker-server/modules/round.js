@@ -14,6 +14,8 @@ class Round {
         this.gameId = gameId;
         this.io = io;
         this.pot = 0.0;
+        this.dealerCards = [];
+
         this.didHandOutCards = false;
         this.didSmallBlind = false;
         this.didBigBlind = false;
@@ -75,7 +77,7 @@ class Round {
             console.log(`next player: ${this.players[currentPlayerIndex + 1].username}`.data);
             this.players[currentPlayerIndex + 1].isCurrentPlayer = true;
         }
-        
+
         return this.emitPlayers();
     }
     bet(player, amount) {
@@ -106,6 +108,7 @@ class Round {
             this.emitPlayers();
         }
         console.log(`round started`.info);
+        this.handOutCards();
         return true;
     }
     emitPlayers(withCards = false) {
@@ -169,13 +172,15 @@ class Round {
             return false;
         }
         if (DEBUG) { console.log(`hand out cards`.debug); }
+        this.dealerCards = this.stock.splice(0, 3);
         this.players.forEach(player => {
             player.cards = this.stock.splice(0, 2);
             if (DEBUG) { console.log(`hand out (${player.cards[0].suit}${player.cards[0].rank} & ${player.cards[1].suit}${player.cards[1].rank}) to ${player.username}`.debug); }
-            player.privateEmit(HAND_OUT_CARDS, { cards: player.cards });
-        });
+            player.privateEmit(HAND_OUT_CARDS, { cards: player.cards, dealerCards: this.dealerCards, id: player.socket.id });
+    });
+
         this.didHandOutCards = true;
-        return true;
+return true;
     }
 }
 module.exports = Round;

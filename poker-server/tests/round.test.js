@@ -24,7 +24,7 @@ describe('round handles correct', () => {
     })
 
     test('should have 52 cards in stock', () => {
-        expect(game.getCurrentRound().stock.length).toBe(52);
+        expect(game.getCurrentRound().stock.length).toBe(45);
     })
 
     test('should set random roles', () => {

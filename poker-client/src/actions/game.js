@@ -165,3 +165,19 @@ export const updatePlayers = data => {
         players: data.players
     }
 }
+
+export const handOutCardsError = data => {
+    return {
+        type: HAND_OUT_CARDS_ERROR,
+        text: data.text
+    }
+}
+
+export const handOutCards = data => {
+    return {
+        type: HAND_OUT_CARDS,
+        cards: data.cards,
+        dealerCards: data.dealerCards,
+        id: data.id
+    }
+}

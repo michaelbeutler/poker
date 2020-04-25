@@ -143,4 +143,20 @@ describe('actions for game', () => {
         }
         expect(actions.updatePlayers(data)).toEqual(expectedAction)
     })
+    it('should create an action to set hand out cards error', () => {
+        const data = { text: "test" }
+        const expectedAction = {
+            type: actions.HAND_OUT_CARDS_ERROR,
+            ...data
+        }
+        expect(actions.handOutCardsError(data)).toEqual(expectedAction)
+    })
+    it('should create an action to set hand out cards', () => {
+        const data = { cards: [null, null], dealerCards: [null, null, null], id: "1234" }
+        const expectedAction = {
+            type: actions.HAND_OUT_CARDS,
+            ...data
+        }
+        expect(actions.handOutCards(data)).toEqual(expectedAction)
+    })
 });

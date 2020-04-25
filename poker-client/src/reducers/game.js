@@ -1,5 +1,5 @@
 import {
-    CREATE_GAME_SUCCESS, CREATE_GAME_ERROR, JOIN_GAME_SUCCESS, JOIN_GAME_ERROR, LEAVE_GAME_SUCCESS, LEAVE_GAME_ERROR, JOIN_GAME, LEAVE_GAME, PLAYER_READY, PLAYER_READY_SUCCESS, PLAYER_READY_ERROR, GAME_START, PLAYER_NOT_READY, PLAYER_NOT_READY_SUCCESS, PLAYER_NOT_READY_ERROR, GAME_NEW_ROUND, UPDATE_PLAYERS
+    CREATE_GAME_SUCCESS, CREATE_GAME_ERROR, JOIN_GAME_SUCCESS, JOIN_GAME_ERROR, LEAVE_GAME_SUCCESS, LEAVE_GAME_ERROR, JOIN_GAME, LEAVE_GAME, PLAYER_READY, PLAYER_READY_SUCCESS, PLAYER_READY_ERROR, GAME_START, PLAYER_NOT_READY, PLAYER_NOT_READY_SUCCESS, PLAYER_NOT_READY_ERROR, GAME_NEW_ROUND, UPDATE_PLAYERS, HAND_OUT_CARDS
 } from '../actions/game'
 const game = (
     state = {
@@ -125,6 +125,22 @@ const game = (
                             players: action.players.map(player => {
                                 return { ...player, isReady: true }
                             })
+                        }
+                    }
+                    return round;
+                })
+            });
+        case HAND_OUT_CARDS:
+            return Object.assign({}, state, {
+                rounds: state.rounds.map((round, index) => {
+                    if (index === state.rounds.length - 1) {
+                        return {
+                            ...round,
+                            players: round.players.map(player => {
+                                if (player.id === action.id) { return { ...player, cards: action.cards } };
+                                return { ...player, cards: [null, null] }
+                            }),
+                            dealerCards: action.dealerCards
                         }
                     }
                     return round;

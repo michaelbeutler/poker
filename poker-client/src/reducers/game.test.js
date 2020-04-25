@@ -405,4 +405,36 @@ describe('game reducer', () => {
             }]
         })
     })
+    it('should handle HAND_OUT_CARDS', () => {
+        expect(
+            reducer({
+                rounds: [{
+                    players: [
+                        {
+                            id: "1234",
+                            username: "test",
+                            cards: [],
+                        }
+                    ],
+                    dealerCards: []
+                }]
+            }, {
+                type: types.HAND_OUT_CARDS,
+                cards: [{ suit: "CLUBS", rank: 10 }, { suit: "CLUBS", rank: 2 }],
+                dealerCards: [{ suit: "HEARTS", rank: 2 }, { suit: "CLUBS", rank: "A" }, { suit: "HEARTS", rank: 5 }],
+                id: "1234"
+            })
+        ).toEqual({
+            rounds: [{
+                players: [
+                    {
+                        id: "1234",
+                        username: "test",
+                        cards: [{ suit: "CLUBS", rank: 10 }, { suit: "CLUBS", rank: 2 }],
+                    }
+                ],
+                dealerCards: [{ suit: "HEARTS", rank: 2 }, { suit: "CLUBS", rank: "A" }, { suit: "HEARTS", rank: 5 }]
+            }]
+        })
+    })
 })
