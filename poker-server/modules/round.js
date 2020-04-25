@@ -19,7 +19,7 @@ class Round {
         this.didBigBlind = false;
 
         this.smallBlindAmount = 5;
-        this.bigBlindAmount = this.smallBlindAmount * 2;
+        this.bigBlindAmount = 10;
 
         players.forEach(player => {
             player.bet = 0;
@@ -75,6 +75,7 @@ class Round {
             console.log(`next player: ${this.players[currentPlayerIndex + 1].username}`.data);
             this.players[currentPlayerIndex + 1].isCurrentPlayer = true;
         }
+        
         return this.emitPlayers();
     }
     bet(player, amount) {
@@ -138,7 +139,7 @@ class Round {
             this.io.to(this.gameId).emit(SMALL_BLIND_ERROR, { text: "small blind already set" });
             return false;
         }
-        if (this.bet(this.players.filter(player => { return player.isSmallBlind })[0], this.smallBlindAmount)) {
+        if (this.bet(this.players.find(player => player.isSmallBlind), this.smallBlindAmount)) {
             this.io.to(this.gameId).emit(SMALL_BLIND);
             this.didSmallBlind = true;
             this.nextPlayer();
@@ -153,7 +154,7 @@ class Round {
             this.io.to(this.gameId).emit(BIG_BLIND_ERROR, { text: "big blind already set" });
             return false;
         }
-        if (this.bet(this.players.filter(player => { return player.isBigBlind })[0], this.bigBlindAmount)) {
+        if (this.bet(this.players.find(player => player.isBigBlind), this.bigBlindAmount)) {
             this.io.to(this.gameId).emit(BIG_BLIND);
             this.didBigBlind = true;
             this.nextPlayer();
