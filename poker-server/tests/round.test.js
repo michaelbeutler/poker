@@ -29,11 +29,11 @@ describe('round handles correct', () => {
 
     test('should set random roles', () => {
         if (game.getCurrentRound().start()) {
-            const hasDealer = game.getCurrentRound().players.filter(p => { return p.isDealer }).length === 1;
-            const hasSmallBlind = game.getCurrentRound().players.filter(p => { return p.isSmallBlind }).length === 1;
-            const hasBigBlind = game.getCurrentRound().players.filter(p => { return p.isBigBlind }).length === 1;
+            const dealer = game.getCurrentRound().players.find(player => player.isDealer);
+            const smallBlind = game.getCurrentRound().players.find(player => player.isSmallBlind);
+            const bigBlind = game.getCurrentRound().players.find(player => player.isBigBlind);
 
-            expect(hasDealer && hasSmallBlind && hasBigBlind).toBe(true);
+            expect(dealer !== undefined && smallBlind !== undefined && bigBlind !== undefined).toBe(true);
         }
     })
 
@@ -42,8 +42,8 @@ describe('round handles correct', () => {
             p.buyIn(10);
         });
         if (game.getCurrentRound().start()) {
-            const smallBlind = game.getCurrentRound().players.filter(p => { return p.isSmallBlind })[0];
-            const bigBlind = game.getCurrentRound().players.filter(p => { return p.isBigBlind })[0];
+            const smallBlind = game.getCurrentRound().players.find(player => player.isSmallBlind);
+            const bigBlind = game.getCurrentRound().players.find(player => player.isBigBlind);
 
             expect(smallBlind.bet).toBe(5);
             expect(bigBlind.bet).toBe(10);
