@@ -1,6 +1,6 @@
 [![MIT license](https://img.shields.io/badge/License-MIT-blue.svg)](https://lbesson.mit-license.org/)
 [![Open Source Love png2](https://badges.frapsoft.com/os/v2/open-source.png?v=103)](https://github.com/ellerbrock/open-source-badges/)
-[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://GitHub.com/michaelbeutler/poker/graphs/commit-activity)
+[![Maintenance](https://img.shields.io/badge/Maintained%3F-no-red.svg)](https://GitHub.com/michaelbeutler/poker/graphs/commit-activity)
 [![GitHub contributors](https://img.shields.io/github/contributors/michaelbeutler/poker.svg)](https://GitHub.com/michaelbeutler/poker/graphs/contributors/)
 [![GitHub actions](https://github.com/michaelbeutler/poker/workflows/CI/badge.svg)](https://github.com/michaelbeutler/poker/actions)
 
